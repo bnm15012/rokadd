@@ -51,7 +51,7 @@ export function Header({ userName, shopName, onMenuToggle }: HeaderProps) {
   }, [dropdownOpen]);
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-slate-200 bg-white px-4 sm:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 bg-white px-4 sm:px-6 border-b-2 border-indigo-100">
       {/* Mobile menu toggle */}
       <Button
         variant="ghost"
@@ -71,9 +71,9 @@ export function Header({ userName, shopName, onMenuToggle }: HeaderProps) {
       {/* Right side: shop name + user */}
       <div className="flex items-center gap-3">
         {/* Shop name pill — visible on sm+ */}
-        <div className="hidden sm:flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1">
-          <Store className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-          <span className="text-xs font-medium text-slate-600 truncate max-w-[120px]">
+        <div className="hidden sm:flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1 border border-indigo-100">
+          <Store className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
+          <span className="text-xs font-medium text-indigo-700 truncate max-w-[120px]">
             {shopName}
           </span>
         </div>
@@ -83,7 +83,7 @@ export function Header({ userName, shopName, onMenuToggle }: HeaderProps) {
           <button
             type="button"
             onClick={() => setDropdownOpen((prev) => !prev)}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase select-none cursor-pointer transition hover:ring-2 hover:ring-blue-300"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xs font-semibold uppercase select-none cursor-pointer transition hover:ring-2 hover:ring-indigo-300 shadow-md shadow-indigo-500/20"
             title={userName}
             aria-label="User menu"
           >

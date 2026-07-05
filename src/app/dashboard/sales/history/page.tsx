@@ -56,7 +56,7 @@ export default async function SalesHistoryPage({
   return (
     <div className="max-w-6xl mx-auto">
       {/* Sticky header + filter */}
-      <div className="sticky top-0 z-30 bg-white -mx-4 sm:-mx-6 px-4 sm:px-6 pt-1 pb-3 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)] space-y-3">
+      <div className="sticky top-0 z-30 bg-slate-50 -mx-4 sm:-mx-6 px-4 sm:px-6 pt-1 pb-3 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)] space-y-3">
         {/* Header */}
         <div className="flex items-center gap-3">
           <Link
@@ -65,7 +65,9 @@ export default async function SalesHistoryPage({
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
-          <History className="h-6 w-6 text-indigo-600" />
+          <div className="rounded-lg p-1.5 bg-gradient-to-br from-emerald-500 to-teal-500 shadow-sm">
+            <History className="h-5 w-5 text-white" />
+          </div>
           <div>
             <h1 className="text-xl font-bold text-gray-900">Sales History</h1>
             <p className="text-sm text-gray-500">

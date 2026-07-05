@@ -6,6 +6,7 @@ import SalesTrendChart, { type SalesTrendPoint } from '@/components/charts/sales
 import ExpensePieChart, { type ExpenseSlice } from '@/components/charts/expense-pie';
 import ProfitLossBarChart, { type ProfitLossPoint } from '@/components/charts/profit-loss-bar';
 import { AnalyticsDateFilter } from './_components/analytics-date-filter';
+import { BarChart3 } from 'lucide-react';
 
 interface AnalyticsPageProps {
   searchParams: Promise<{
@@ -152,8 +153,12 @@ export default async function AnalyticsPage({ searchParams }: AnalyticsPageProps
   return (
     <div className="space-y-6">
       {/* Header — sticky */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sticky top-0 z-30 bg-white -mx-4 sm:-mx-6 px-4 sm:px-6 pt-1 pb-3 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)]">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sticky top-0 z-30 bg-slate-50 -mx-4 sm:-mx-6 px-4 sm:px-6 pt-1 pb-3 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg p-1.5 bg-gradient-to-br from-rose-500 to-red-500 shadow-sm">
+            <BarChart3 className="h-5 w-5 text-white" />
+          </div>
+          <div>
           <h1 className="text-2xl font-bold text-slate-900">Analytics</h1>
           <p className="mt-1 text-sm text-slate-500">
             {range === 'custom' && params.from && params.to
@@ -162,6 +167,7 @@ export default async function AnalyticsPage({ searchParams }: AnalyticsPageProps
               ? 'Last 30 days'
               : 'Last 7 days'}
           </p>
+          </div>
         </div>
         <AnalyticsDateFilter currentRange={range} from={params.from} to={params.to} />
       </div>

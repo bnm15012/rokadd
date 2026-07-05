@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, useCallback } from 'react';
+import { useActionState, useState, useCallback, useTransition } from 'react';
 import Link from 'next/link';
 import { ShoppingCart, Search, Trash2, Plus, Minus, CheckCircle, AlertCircle, Loader2, History } from 'lucide-react';
 import { createSale } from '@/actions/sales';
@@ -40,8 +40,6 @@ export function POSClient({
   products: ProductRow[];
   customers: CustomerRow[];
 }) {
-  const [state, formAction, isPending] = useActionState(createSale, initialState);
-
   const [cart, setCart] = useState<CartItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [discount, setDiscount] = useState('');
@@ -119,6 +117,8 @@ export function POSClient({
   const discountAmount = discount ? Math.round(parseFloat(discount) * 100) : 0;
   const netAmount = Math.max(0, grandTotal - discountAmount);
 
+  const [, startTransition] = useTransition();
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
@@ -133,7 +133,9 @@ export function POSClient({
     fd.set('saleType', saleType);
     if (customerId) fd.set('customerId', customerId);
 
-    dispatchAction(fd);
+    startTransition(() => {
+      dispatchAction(fd);
+    });
   }
 
   return (

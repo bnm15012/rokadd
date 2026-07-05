@@ -113,7 +113,7 @@ export default async function DashboardHome() {
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
         <p className="text-slate-500">Welcome back. Here is your business overview for today.</p>
-        <div className="mt-3 h-1 w-16 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500" />
+        <div className="mt-3 h-1 w-20 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -121,7 +121,7 @@ export default async function DashboardHome() {
           <Link
             key={s.title}
             href={s.href}
-            className={`${s.bg} rounded-xl border border-white/80 border-l-4 ${s.border} p-5 hover:shadow-lg hover:scale-[1.02] transition-all duration-200`}
+            className={`${s.bg} rounded-xl border border-white/80 border-l-4 ${s.border} p-5 shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all duration-200`}
           >
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium text-slate-600">{s.title}</p>
