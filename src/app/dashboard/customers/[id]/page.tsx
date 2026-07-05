@@ -13,6 +13,7 @@ export default async function CustomerDetailPage({
 }) {
   // params is a Promise in Next.js 15+
   const { id } = await params;
+  const customerId = parseInt(id, 10);
 
   const user = await getSessionUser();
   const shopId = user.shopMembers[0]?.shopId;
@@ -21,7 +22,7 @@ export default async function CustomerDetailPage({
   const db = tenantPrisma(shopId);
 
   const customer = await db.customer.findUnique({
-    where: { id },
+    where: { id: customerId },
     include: {
       creditSales: {
         orderBy: { createdAt: "desc" },
@@ -155,7 +156,7 @@ export default async function CustomerDetailPage({
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-gray-900 text-sm">
                           {sale.saleId
-                            ? `Sale Ref: ${sale.saleId.slice(-8)}`
+                            ? `Sale Ref: ${String(sale.saleId).slice(-8)}`
                             : "Direct Credit"}
                         </span>
                         <PaymentStatusBadge status={sale.status} />

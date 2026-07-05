@@ -6,7 +6,7 @@ import { getSessionUser, requirePermission } from '@/lib/permissions';
 import type { ActionState } from '@/types';
 
 interface ReconItemInput {
-  productId: string;
+  productId: number;
   closingStock: number;
 }
 
@@ -61,14 +61,14 @@ export async function submitReconciliation(
     // Build recon items and calculate totals
     let totalSalesAmount = 0;
     const reconItems: {
-      productId: string;
+      productId: number;
       openingStock: number;
       closingStock: number;
       unitsSold: number;
       sellingPrice: number;
       salesAmount: number;
     }[] = [];
-    const stockUpdates: { productId: string; newStock: number; diff: number }[] = [];
+    const stockUpdates: { productId: number; newStock: number; diff: number }[] = [];
 
     for (const item of items) {
       const product = productMap.get(item.productId);
@@ -137,7 +137,7 @@ export async function submitReconciliation(
             type: 'RECONCILIATION',
             quantityPieces: Math.abs(update.diff),
             note: `Daily reconciliation: stock adjusted from ${update.newStock + update.diff} to ${update.newStock} pieces`,
-            referenceId: recon.id,
+            referenceId: String(recon.id),
           },
         });
       }

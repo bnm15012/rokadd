@@ -13,7 +13,7 @@ datasource db {
 // ============================================================
 
 model SuperAdmin {
-  id        String   @id @default(cuid())
+  id        Int      @id @default(autoincrement())
   email     String   @unique
   password  String
   name      String
@@ -24,7 +24,7 @@ model SuperAdmin {
 }
 
 model Otp {
-  id        String   @id @default(cuid())
+  id        Int      @id @default(autoincrement())
   email     String
   code      String
   expiresAt DateTime
@@ -36,9 +36,9 @@ model Otp {
 }
 
 model AdminAuditLog {
-  id         String   @id @default(cuid())
-  adminId    String
-  shopId     String
+  id         Int      @id @default(autoincrement())
+  adminId    Int
+  shopId     Int
   action     String
   metadata   Json?
   accessedAt DateTime @default(now())
@@ -49,7 +49,7 @@ model AdminAuditLog {
 }
 
 model SubscriptionPlan {
-  id             String   @id @default(cuid())
+  id             Int      @id @default(autoincrement())
   name           String
   slug           String   @unique
   description    String?  @db.Text
@@ -74,7 +74,7 @@ model SubscriptionPlan {
 // ============================================================
 
 model User {
-  id            String    @id @default(cuid())
+  id            Int       @id @default(autoincrement())
   email         String    @unique
   password      String
   name          String
@@ -90,7 +90,7 @@ model User {
 }
 
 model Shop {
-  id        String  @id @default(cuid())
+  id        Int     @id @default(autoincrement())
   name      String
   slug      String  @unique
   address   String? @db.Text
@@ -125,11 +125,11 @@ model Shop {
 // ============================================================
 
 model ShopMember {
-  id        String   @id @default(cuid())
+  id        Int      @id @default(autoincrement())
   role      Role     @default(STAFF)
-  userId    String
-  shopId    String
-  managerId String?
+  userId    Int
+  shopId    Int
+  managerId Int?
   isActive  Boolean  @default(true)
   joinedAt  DateTime @default(now())
 
@@ -150,8 +150,8 @@ enum Role {
 }
 
 model MemberPermission {
-  id           String @id @default(cuid())
-  shopMemberId String @unique
+  id           Int    @id @default(autoincrement())
+  shopMemberId Int    @unique
 
   canViewDashboard          Boolean @default(true)
   canViewProducts           Boolean @default(false)
@@ -192,9 +192,9 @@ model MemberPermission {
 // ============================================================
 
 model Subscription {
-  id                     String             @id @default(cuid())
-  shopId                 String             @unique
-  planId                 String
+  id                     Int                @id @default(autoincrement())
+  shopId                 Int                @unique
+  planId                 Int
   status                 SubscriptionStatus @default(TRIALING)
   razorpaySubscriptionId String?            @unique
   razorpayCustomerId     String?
@@ -221,8 +221,8 @@ enum SubscriptionStatus {
 }
 
 model SubscriptionPayment {
-  id                String   @id @default(cuid())
-  subscriptionId    String
+  id                Int      @id @default(autoincrement())
+  subscriptionId    Int
   amount            Int
   currency          String   @default("INR")
   razorpayPaymentId String?  @unique
@@ -240,9 +240,9 @@ model SubscriptionPayment {
 // ============================================================
 
 model Category {
-  id     String @id @default(cuid())
+  id     Int    @id @default(autoincrement())
   name   String
-  shopId String
+  shopId Int
 
   shop     Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
   products Product[]
@@ -252,11 +252,11 @@ model Category {
 }
 
 model Product {
-  id                    String  @id @default(cuid())
+  id                    Int     @id @default(autoincrement())
   name                  String
   sku                   String?
-  shopId                String
-  categoryId            String?
+  shopId                Int
+  categoryId            Int?
   piecesPerCarton       Int     @default(1)
   costPricePerCarton    Int
   sellingPricePerCarton Int
@@ -280,9 +280,9 @@ model Product {
 }
 
 model StockLog {
-  id             String       @id @default(cuid())
-  shopId         String
-  productId      String
+  id             Int          @id @default(autoincrement())
+  shopId         Int
+  productId      Int
   type           StockLogType
   quantityPieces Int
   note           String?      @db.Text
@@ -310,10 +310,10 @@ enum StockLogType {
 // ============================================================
 
 model Sale {
-  id          String   @id @default(cuid())
-  shopId      String
+  id          Int      @id @default(autoincrement())
+  shopId      Int
   invoiceNo   String?
-  customerId  String?
+  customerId  Int?
   saleType    SaleType @default(CASH)
   totalAmount Int
   discount    Int      @default(0)
@@ -337,11 +337,11 @@ enum SaleType {
 }
 
 model SaleItem {
-  id              String @id @default(cuid())
-  saleId          String
-  productId       String
-  cartonsQty      Int    @default(0)
-  piecesQty       Int    @default(0)
+  id              Int @id @default(autoincrement())
+  saleId          Int
+  productId       Int
+  cartonsQty      Int @default(0)
+  piecesQty       Int @default(0)
   totalPieces     Int
   unitPriceCarton Int
   unitPricePiece  Int
@@ -358,13 +358,13 @@ model SaleItem {
 // ============================================================
 
 model Vendor {
-  id      String  @id @default(cuid())
+  id      Int     @id @default(autoincrement())
   name    String
   phone   String?
   email   String?
   address String? @db.Text
   gstin   String?
-  shopId  String
+  shopId  Int
 
   shop      Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
   purchases Purchase[]
@@ -374,9 +374,9 @@ model Vendor {
 }
 
 model Purchase {
-  id            String        @id @default(cuid())
-  shopId        String
-  vendorId      String
+  id            Int           @id @default(autoincrement())
+  shopId        Int
+  vendorId      Int
   billNumber    String?
   totalAmount   Int
   paidAmount    Int           @default(0)
@@ -403,11 +403,11 @@ enum PaymentStatus {
 }
 
 model PurchaseItem {
-  id            String @id @default(cuid())
-  purchaseId    String
-  productId     String
-  cartonsQty    Int    @default(0)
-  piecesQty     Int    @default(0)
+  id            Int @id @default(autoincrement())
+  purchaseId    Int
+  productId     Int
+  cartonsQty    Int @default(0)
+  piecesQty     Int @default(0)
   totalPieces   Int
   costPerCarton Int
   lineTotal     Int
@@ -419,9 +419,9 @@ model PurchaseItem {
 }
 
 model VendorPayment {
-  id          String   @id @default(cuid())
-  purchaseId  String
-  shopId      String
+  id          Int      @id @default(autoincrement())
+  purchaseId  Int
+  shopId      Int
   amount      Int
   paymentMode String   @default("CASH")
   note        String?  @db.Text
@@ -439,12 +439,12 @@ model VendorPayment {
 // ============================================================
 
 model Customer {
-  id      String  @id @default(cuid())
+  id      Int     @id @default(autoincrement())
   name    String
   phone   String?
   email   String?
   address String? @db.Text
-  shopId  String
+  shopId  Int
 
   shop        Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
   sales       Sale[]
@@ -455,10 +455,10 @@ model Customer {
 }
 
 model CreditSale {
-  id          String        @id @default(cuid())
-  shopId      String
-  customerId  String
-  saleId      String?
+  id          Int           @id @default(autoincrement())
+  shopId      Int
+  customerId  Int
+  saleId      Int?
   totalAmount Int
   paidAmount  Int           @default(0)
   status      PaymentStatus @default(UNPAID)
@@ -476,8 +476,8 @@ model CreditSale {
 }
 
 model CreditPayment {
-  id           String   @id @default(cuid())
-  creditSaleId String
+  id           Int      @id @default(autoincrement())
+  creditSaleId Int
   amount       Int
   paymentMode  String   @default("CASH")
   note         String?  @db.Text
@@ -494,8 +494,8 @@ model CreditPayment {
 // ============================================================
 
 model Expense {
-  id          String   @id @default(cuid())
-  shopId      String
+  id          Int      @id @default(autoincrement())
+  shopId      Int
   category    String
   description String?  @db.Text
   amount      Int
@@ -513,15 +513,15 @@ model Expense {
 // ============================================================
 
 model DailyRecon {
-  id               String          @id @default(cuid())
-  shopId           String
+  id               Int             @id @default(autoincrement())
+  shopId           Int
   date             DateTime        @db.Date
   totalSalesAmount Int             @default(0)  // sum of all item sales (in paise)
   cashInHand       Int?            // physical cash counted by staff (paise)
   cashExpected     Int?            // expected cash from sales (paise)
   cashDifference   Int?            // cashInHand - cashExpected (paise, +ve = excess, -ve = shortage)
   note             String?         @db.Text
-  createdBy        String          // userId who submitted
+  createdBy        Int             // userId who submitted
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 
@@ -533,9 +533,9 @@ model DailyRecon {
 }
 
 model DailyReconItem {
-  id              String @id @default(cuid())
-  reconId         String
-  productId       String
+  id              Int @id @default(autoincrement())
+  reconId         Int
+  productId       Int
   openingStock    Int    // pieces at start of day
   closingStock    Int    // pieces counted by staff
   unitsSold       Int    // opening - closing (pieces)
@@ -552,8 +552,8 @@ model DailyReconItem {
 // ============================================================
 
 model DailySummary {
-  id                 String   @id @default(cuid())
-  shopId             String
+  id                 Int      @id @default(autoincrement())
+  shopId             Int
   date               DateTime @db.Date
   totalSalesAmount   Int      @default(0)
   totalCashSales     Int      @default(0)

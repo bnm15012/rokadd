@@ -392,7 +392,7 @@ async function main() {
   async function createSale(opts: {
     date: Date;
     saleType: "CASH" | "CREDIT";
-    customerId?: string;
+    customerId?: number;
     invoiceNo: string;
     items: { sku: string; cartonsQty: number; piecesQty: number }[];
     discount?: number;
@@ -454,7 +454,7 @@ async function main() {
           productId: product.id,
           type: "SALE_OUTWARD",
           quantityPieces: -totalPieces,
-          referenceId: sale.id,
+          referenceId: String(sale.id),
           createdAt: opts.date,
         },
       });

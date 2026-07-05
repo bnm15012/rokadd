@@ -15,7 +15,7 @@ import { formatStock, toTotalPieces } from '@/lib/utils';
 import type { ActionState } from '@/types';
 
 interface ProductRow {
-  id: string;
+  id: number;
   name: string;
   sku: string | null;
   piecesPerCarton: number;
@@ -27,7 +27,7 @@ const initialState: ActionState = { success: false };
 export function StockInwardForm({ products }: { products: ProductRow[] }) {
   const [state, formAction, isPending] = useActionState(recordStockInward, initialState);
 
-  const [selectedProductId, setSelectedProductId] = useState('');
+  const [selectedProductId, setSelectedProductId] = useState<number | ''>('');
   const [cartonsQty, setCartonsQty] = useState(0);
   const [piecesQty, setPiecesQty] = useState(0);
 
@@ -40,7 +40,7 @@ export function StockInwardForm({ products }: { products: ProductRow[] }) {
     ? selectedProduct.currentStockPieces + totalPiecesAdding
     : 0;
 
-  function handleProductChange(id: string) {
+  function handleProductChange(id: number) {
     setSelectedProductId(id);
     setCartonsQty(0);
     setPiecesQty(0);
@@ -92,7 +92,7 @@ export function StockInwardForm({ products }: { products: ProductRow[] }) {
             name="productId"
             required
             value={selectedProductId}
-            onChange={(e) => handleProductChange(e.target.value)}
+            onChange={(e) => handleProductChange(parseInt(e.target.value, 10))}
             className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white"
           >
             <option value="">— Select a product —</option>
@@ -240,7 +240,7 @@ import { adjustStock } from '@/actions/inventory';
 
 function AdjustStockInlineForm({ products }: { products: ProductRow[] }) {
   const [state, formAction, isPending] = useActionState(adjustStock, initialState);
-  const [selectedProductId, setSelectedProductId] = useState('');
+  const [selectedProductId, setSelectedProductId] = useState<number | ''>('');
   const [adjustType, setAdjustType] = useState<'ADD' | 'REMOVE'>('ADD');
 
   const selectedProduct = products.find((p) => p.id === selectedProductId);
@@ -267,7 +267,7 @@ function AdjustStockInlineForm({ products }: { products: ProductRow[] }) {
               name="productId"
               required
               value={selectedProductId}
-              onChange={(e) => setSelectedProductId(e.target.value)}
+              onChange={(e) => setSelectedProductId(e.target.value ? parseInt(e.target.value, 10) : '')}
               className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white"
             >
               <option value="">— Select product —</option>

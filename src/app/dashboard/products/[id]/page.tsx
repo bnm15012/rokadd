@@ -13,6 +13,7 @@ export default async function EditProductPage({
 }) {
   // params is a Promise in Next.js 16 — must await
   const { id } = await params
+  const productId = parseInt(id, 10)
 
   let user
   try {
@@ -34,7 +35,7 @@ export default async function EditProductPage({
 
   const [product, categories] = await Promise.all([
     db.product.findFirst({
-      where: { id, isActive: true },
+      where: { id: productId, isActive: true },
     }),
     db.category.findMany({
       orderBy: { name: 'asc' },

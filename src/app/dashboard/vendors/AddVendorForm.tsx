@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { createVendor } from "@/actions/vendors";
 import type { ActionState } from "@/types";
 
@@ -13,8 +13,9 @@ export function AddVendorForm() {
     initialState
   );
 
-  // Close dialog on success
-  if (state.success && open) setOpen(false);
+  useEffect(() => {
+    if (state.success) setOpen(false);
+  }, [state]);
 
   return (
     <>

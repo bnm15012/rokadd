@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useActionState } from 'react';
+import { useState, useActionState, useEffect } from 'react';
 import { Plus, Pencil, X } from 'lucide-react';
 import { createPlan, updatePlan } from '../_actions/plan-actions';
 import type { ActionState } from '@/types';
 
 interface PlanData {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   description: string;
@@ -33,10 +33,12 @@ export function PlanFormDialog({ mode, plan }: PlanFormDialogProps) {
     { success: false }
   );
 
-  // Close on success
-  if (state.success && open) {
-    setTimeout(() => setOpen(false), 800);
-  }
+  useEffect(() => {
+    if (state.success) {
+      const t = setTimeout(() => setOpen(false), 800);
+      return () => clearTimeout(t);
+    }
+  }, [state]);
 
   return (
     <>

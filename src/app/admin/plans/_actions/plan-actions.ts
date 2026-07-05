@@ -42,7 +42,7 @@ export async function updatePlan(prevState: ActionState, formData: FormData): Pr
     const user = await getSessionUser();
     if (!user.isSuperAdmin) return { success: false, error: 'Unauthorized' };
 
-    const id = formData.get('planId') as string;
+    const id = parseInt(formData.get('planId') as string, 10);
     const name = (formData.get('name') as string)?.trim();
     const description = (formData.get('description') as string)?.trim() || null;
     const priceMonthly = Math.round(parseFloat(formData.get('priceMonthly') as string) * 100);
@@ -53,7 +53,7 @@ export async function updatePlan(prevState: ActionState, formData: FormData): Pr
     const isActive = formData.get('isActive') === 'on';
     const razorpayPlanId = (formData.get('razorpayPlanId') as string)?.trim() || null;
 
-    if (!id || !name) return { success: false, error: 'Plan ID and name are required' };
+    if (!id || isNaN(id) || !name) return { success: false, error: 'Plan ID and name are required' };
 
     await prisma.subscriptionPlan.update({
       where: { id },
@@ -68,7 +68,7 @@ export async function updatePlan(prevState: ActionState, formData: FormData): Pr
   }
 }
 
-export async function deletePlan(planId: string): Promise<ActionState> {
+export async function deletePlan(planId: number): Promise<ActionState> {
   try {
     const user = await getSessionUser();
     if (!user.isSuperAdmin) return { success: false, error: 'Unauthorized' };

@@ -12,7 +12,7 @@ interface DashboardData {
 }
 
 interface ProductRow {
-  id: string; name: string; sku: string | null;
+  id: number; name: string; sku: string | null;
   costPricePerCarton: number;
   sellingPricePerCarton: number;
   sellingPricePerPiece: number;
@@ -22,13 +22,13 @@ interface ProductRow {
 }
 
 interface SaleRow {
-  id: string; invoiceNo: string; saleDate: Date | string;
+  id: number; invoiceNo: string; saleDate: Date | string;
   netAmount: number; saleType: string;
   customer: { name: string } | null;
 }
 
 interface VendorRow {
-  id: string; name: string; phone: string | null;
+  id: number; name: string; phone: string | null;
   _count: { purchases: number };
 }
 
@@ -38,14 +38,14 @@ interface CashFlowData {
 }
 
 interface StaffRow {
-  id: string; role: Role; isActive: boolean;
+  id: number; role: Role; isActive: boolean;
   user: { name: string; email: string };
 }
 
 interface TenantTabContentProps {
   tab: string;
   tabData: unknown;
-  shopId: string;
+  shopId: number;
 }
 
 function fmtDate(d: Date | string) {

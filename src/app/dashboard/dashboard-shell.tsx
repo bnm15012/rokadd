@@ -13,11 +13,11 @@ interface DashboardShellProps {
   navItems: NavItem[];
   role: Role;
   userName: string;
-  shopId: string;
+  shopId: number;
   shopName: string;
   shopSlug: string;
-  memberId: string;
-  managerId: string | null;
+  memberId: number;
+  managerId: number | null;
   permissions: ShopMemberInfo["permissions"];
 }
 

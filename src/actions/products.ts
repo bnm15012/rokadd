@@ -7,7 +7,7 @@ import type { ActionState } from '@/types'
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
-async function getShopId(): Promise<string> {
+async function getShopId(): Promise<number> {
   const user = await getSessionUser()
   const shopId = user.shopMembers[0]?.shopId
   if (!shopId) throw new Error('No shop found for this user')
@@ -72,7 +72,8 @@ export async function createProduct(
 
     // Optional fields
     const sku = (formData.get('sku') as string | null)?.trim() || null
-    const categoryId = (formData.get('categoryId') as string | null)?.trim() || null
+    const rawCat = (formData.get('categoryId') as string | null)?.trim()
+    const categoryId = rawCat ? parseInt(rawCat, 10) : null
 
     const db = tenantPrisma(shopId)
 
@@ -83,7 +84,7 @@ export async function createProduct(
       data: {
         name,
         sku,
-        ...(categoryId ? { categoryId } : {}),
+        ...(categoryId !== null ? { categoryId } : {}),
         piecesPerCarton,
         costPricePerCarton: costPricePaise,
         sellingPricePerCarton: sellingPriceCartonPaise,
@@ -112,8 +113,8 @@ export async function updateProduct(
     const shopId = await getShopId()
     await requirePermission(shopId, 'canManageProducts')
 
-    const productId = (formData.get('productId') as string | null)?.trim()
-    if (!productId) return { success: false, error: 'Product ID is required' }
+    const productId = parseInt(formData.get('productId') as string, 10)
+    if (isNaN(productId)) return { success: false, error: 'Product ID is required' }
 
     const name = (formData.get('name') as string | null)?.trim()
     if (!name) return { success: false, error: 'Product name is required' }
@@ -138,7 +139,8 @@ export async function updateProduct(
     const lowStockThreshold = parseIntField(formData, 'lowStockThreshold') ?? 0
 
     const sku = (formData.get('sku') as string | null)?.trim() || null
-    const categoryId = (formData.get('categoryId') as string | null)?.trim() || null
+    const rawCatUpdate = (formData.get('categoryId') as string | null)?.trim()
+    const categoryId = rawCatUpdate ? parseInt(rawCatUpdate, 10) : null
 
     const db = tenantPrisma(shopId)
 
@@ -147,7 +149,7 @@ export async function updateProduct(
       data: {
         name,
         sku,
-        categoryId: categoryId || null,
+        categoryId: categoryId !== null ? categoryId : null,
         piecesPerCarton,
         costPricePerCarton: costPricePaise,
         sellingPricePerCarton: sellingPriceCartonPaise,
@@ -167,7 +169,7 @@ export async function updateProduct(
 
 // ─── deleteProduct ──────────────────────────────────────────────────────────
 
-export async function deleteProduct(productId: string): Promise<ActionState> {
+export async function deleteProduct(productId: number): Promise<ActionState> {
   try {
     const shopId = await getShopId()
     await requirePermission(shopId, 'canManageProducts')

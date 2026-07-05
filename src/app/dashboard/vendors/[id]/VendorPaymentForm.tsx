@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { makeVendorPayment } from "@/actions/vendors";
 import { formatCurrency } from "@/lib/utils";
 import type { ActionState } from "@/types";
@@ -8,7 +8,7 @@ import type { ActionState } from "@/types";
 const initialState: ActionState = { success: false };
 
 interface Props {
-  purchaseId: string;
+  purchaseId: number;
   balancePaise: number;
 }
 
@@ -19,7 +19,9 @@ export function VendorPaymentForm({ purchaseId, balancePaise }: Props) {
     initialState
   );
 
-  if (state.success && open) setOpen(false);
+  useEffect(() => {
+    if (state.success) setOpen(false);
+  }, [state]);
 
   return (
     <>

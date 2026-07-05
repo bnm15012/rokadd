@@ -22,7 +22,8 @@ export async function createSale(
     await requirePermission(shopId, 'canCreateSales');
 
     const itemsRaw = formData.get('items') as string;
-    const customerId = (formData.get('customerId') as string) || null;
+    const rawCustomerId = formData.get('customerId') as string | null;
+    const customerId = rawCustomerId ? parseInt(rawCustomerId, 10) : null;
     const saleType = (formData.get('saleType') as string) || 'CASH';
     const discountRaw = formData.get('discount') as string;
     const discount = discountRaw ? Math.round(parseFloat(discountRaw) * 100) : 0;
@@ -44,7 +45,7 @@ export async function createSale(
     const result = await prisma.$transaction(async (tx) => {
       let totalAmount = 0;
       const saleItemsData: {
-        productId: string;
+        productId: number;
         cartonsQty: number;
         piecesQty: number;
         totalPieces: number;
@@ -127,7 +128,7 @@ export async function createSale(
             type: 'SALE_OUTWARD',
             quantityPieces: item.totalPieces,
             note: `Sale invoice: ${invoiceNo}`,
-            referenceId: sale.id,
+            referenceId: String(sale.id),
           },
         });
       }

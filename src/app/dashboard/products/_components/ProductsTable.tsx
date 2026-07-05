@@ -7,7 +7,7 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { deleteProduct } from '@/actions/products'
 
 interface ProductRow {
-  id: string
+  id: number
   name: string
   sku: string | null
   categoryName: string | null
@@ -35,8 +35,8 @@ export function ProductsTable({
   const pathname = usePathname()
   const [isPending, startTransition] = useTransition()
   const [query, setQuery] = useState(initialQuery)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [confirmId, setConfirmId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [confirmId, setConfirmId] = useState<number | null>(null)
 
   // Live client-side filter (mirrors the server-side filter, avoids full navigation
   // for fast UX while also updating the URL for shareable links).
@@ -59,7 +59,7 @@ export function ProductsTable({
   )
 
   const handleDelete = useCallback(
-    async (id: string) => {
+    async (id: number) => {
       setDeletingId(id)
       setConfirmId(null)
       const result = await deleteProduct(id)

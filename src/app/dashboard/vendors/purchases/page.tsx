@@ -8,7 +8,8 @@ export default async function NewPurchasePage({
   searchParams: Promise<{ vendorId?: string }>;
 }) {
   // searchParams is a Promise in Next.js 15+
-  const { vendorId: preselectedVendorId } = await searchParams;
+  const { vendorId: rawVendorId } = await searchParams;
+  const preselectedVendorId = rawVendorId ? parseInt(rawVendorId, 10) : null;
 
   const user = await getSessionUser();
   const shopId = user.shopMembers[0]?.shopId;
@@ -35,7 +36,7 @@ export default async function NewPurchasePage({
     <NewPurchaseClient
       vendors={vendors}
       products={products}
-      preselectedVendorId={preselectedVendorId ?? null}
+      preselectedVendorId={preselectedVendorId}
     />
   );
 }

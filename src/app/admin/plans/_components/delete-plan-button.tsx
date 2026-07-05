@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { deletePlan } from '../_actions/plan-actions';
 
-export function DeletePlanButton({ planId, planName }: { planId: string; planName: string }) {
+export function DeletePlanButton({ planId, planName }: { planId: number; planName: string }) {
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

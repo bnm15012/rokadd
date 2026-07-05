@@ -18,12 +18,12 @@ export interface DailyCashFlowSummary {
   creditCollected: number;
   netCashBalance: number;
   isFinalized: boolean;
-  summaryId: string | null;
+  summaryId: number | null;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-async function getShopId(): Promise<string> {
+async function getShopId(): Promise<number> {
   const user = await getSessionUser();
   const shopId = user.shopMembers[0]?.shopId;
   if (!shopId) throw new Error("No shop found for this user");
@@ -33,7 +33,7 @@ async function getShopId(): Promise<string> {
 // ─── Get Daily Cash Flow ──────────────────────────────────────────────────────
 
 export async function getDailyCashFlow(
-  shopId: string,
+  shopId: number,
   date: Date
 ): Promise<DailyCashFlowSummary> {
   const dayStart = startOfDay(date);

@@ -11,7 +11,7 @@ interface PermissionDef {
 }
 
 interface PermissionsFormProps {
-  memberId: string;
+  memberId: number;
   screenPermissions: PermissionDef[];
   dataPermissions: PermissionDef[];
   allowedKeys: PermissionKey[];

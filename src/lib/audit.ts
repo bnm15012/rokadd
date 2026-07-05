@@ -2,8 +2,8 @@ import { prisma } from "./prisma";
 import type { Prisma } from "@/generated/prisma/client";
 
 export async function logAdminAccess(
-  adminId: string,
-  shopId: string,
+  adminId: number,
+  shopId: number,
   action: string,
   metadata?: Prisma.InputJsonValue
 ) {

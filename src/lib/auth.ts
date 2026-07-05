@@ -77,9 +77,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     session({ session, token }) {
-      (session.user as any).id = token.userId;
+      // JWT may serialize numbers as strings; ensure IDs are numbers
+      (session.user as any).id = Number(token.userId);
       (session.user as any).isSuperAdmin = token.isSuperAdmin;
-      (session.user as any).shopMembers = token.shopMembers;
+      const members = (token.shopMembers as any[]) || [];
+      (session.user as any).shopMembers = members.map((m: any) => ({
+        ...m,
+        id: Number(m.id),
+        shopId: Number(m.shopId),
+        managerId: m.managerId != null ? Number(m.managerId) : null,
+      }));
       return session;
     },
   },

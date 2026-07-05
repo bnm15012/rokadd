@@ -6,15 +6,15 @@ import { createProduct, updateProduct, createCategory } from '@/actions/products
 import type { ActionState } from '@/types'
 
 interface Category {
-  id: string
+  id: number
   name: string
 }
 
 interface ProductDefaults {
-  id?: string
+  id?: number
   name?: string
   sku?: string
-  categoryId?: string
+  categoryId?: number
   piecesPerCarton?: number
   /** already in paise — displayed converted to rupees */
   costPricePerCarton?: number

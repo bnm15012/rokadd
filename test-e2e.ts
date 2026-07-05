@@ -244,7 +244,7 @@ async function main() {
       data: {
         shopId, productId: prod.id,
         type: "SALE_OUTWARD", quantityPieces: totalPieces,
-        referenceId: s.id,
+        referenceId: String(s.id),
       },
     });
     return s;
@@ -392,7 +392,7 @@ async function main() {
       data: {
         shopId, productId: prod.id,
         type: "PURCHASE_INWARD", quantityPieces: totalPieces,
-        referenceId: pur.id,
+        referenceId: String(pur.id),
       },
     });
     return pur;

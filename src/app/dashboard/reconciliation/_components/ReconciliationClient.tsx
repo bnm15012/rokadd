@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 import type { ActionState } from '@/types';
 
 interface ProductRow {
-  id: string;
+  id: number;
   name: string;
   sku: string | null;
   categoryName: string | null;
@@ -30,7 +30,7 @@ interface ProductRow {
 }
 
 interface ExistingReconItem {
-  productId: string;
+  productId: number;
   openingStock: number;
   closingStock: number;
   unitsSold: number;
@@ -132,7 +132,7 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
 
   // Build a product lookup for the submitted view
   const productMap = useMemo(() => {
-    const map = new Map<string, ProductRow>();
+    const map = new Map<number, ProductRow>();
     for (const p of products) map.set(p.id, p);
     return map;
   }, [products]);

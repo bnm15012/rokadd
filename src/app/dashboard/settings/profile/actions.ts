@@ -79,10 +79,11 @@ export async function updateProfileAction(
 ): Promise<ProfileState> {
   // 1. Authenticate
   const session = await auth();
-  const user = session?.user as { id?: string } | undefined;
+  const user = session?.user as { id?: number } | undefined;
   if (!user?.id) {
     return { error: "You must be signed in to update your profile." };
   }
+  const userId = Number(user.id);
 
   // 2. Validate
   const raw = {
@@ -105,13 +106,13 @@ export async function updateProfileAction(
 
   // 3. Check if new email is already taken by another user
   const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing && existing.id !== user.id) {
+  if (existing && existing.id !== userId) {
     return { errors: { email: ["This email address is already in use."] } };
   }
 
   // 4. Update user
   await prisma.user.update({
-    where: { id: user.id },
+    where: { id: userId },
     data: { name, email },
   });
 
@@ -126,10 +127,11 @@ export async function requestOtpAction(
   formData: FormData
 ): Promise<PasswordState> {
   const session = await auth();
-  const user = session?.user as { id?: string } | undefined;
+  const user = session?.user as { id?: number } | undefined;
   if (!user?.id) {
     return { error: "You must be signed in to change your password." };
   }
+  const userId = Number(user.id);
 
   // Validate new password
   const raw = {
@@ -149,7 +151,7 @@ export async function requestOtpAction(
 
   // Fetch user email
   const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
+    where: { id: userId },
     select: { email: true },
   });
   if (!dbUser) {
@@ -200,10 +202,11 @@ export async function verifyOtpAndChangePasswordAction(
   formData: FormData
 ): Promise<PasswordState> {
   const session = await auth();
-  const user = session?.user as { id?: string } | undefined;
+  const user = session?.user as { id?: number } | undefined;
   if (!user?.id) {
     return { error: "You must be signed in to change your password." };
   }
+  const userId = Number(user.id);
 
   const otp = (formData.get("otp") as string)?.trim();
   const newPassword = formData.get("newPassword") as string;
@@ -217,7 +220,7 @@ export async function verifyOtpAndChangePasswordAction(
 
   // Fetch user email
   const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
+    where: { id: userId },
     select: { email: true },
   });
   if (!dbUser) {
@@ -248,7 +251,7 @@ export async function verifyOtpAndChangePasswordAction(
   // Hash and save new password
   const hashedPassword = await bcrypt.hash(newPassword, 12);
   await prisma.user.update({
-    where: { id: user.id },
+    where: { id: userId },
     data: { password: hashedPassword },
   });
 

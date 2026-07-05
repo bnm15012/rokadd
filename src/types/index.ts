@@ -1,8 +1,8 @@
 import type { Role } from "@/generated/prisma/enums";
 
 export interface MemberPermission {
-  id: string;
-  shopMemberId: string;
+  id: number;
+  shopMemberId: number;
   canViewDashboard: boolean;
   canViewProducts: boolean;
   canManageProducts: boolean;
@@ -35,17 +35,17 @@ export interface MemberPermission {
 export type PermissionKey = keyof Omit<MemberPermission, "id" | "shopMemberId">;
 
 export interface ShopMemberInfo {
-  id: string;
-  shopId: string;
+  id: number;
+  shopId: number;
   shopName: string;
   shopSlug: string;
   role: Role;
-  managerId: string | null;
+  managerId: number | null;
   permissions: MemberPermission | null;
 }
 
 export interface SessionUser {
-  id: string;
+  id: number;
   email: string;
   name: string;
   isSuperAdmin: boolean;
@@ -59,13 +59,13 @@ export interface ActionState {
 }
 
 export interface SaleItemInput {
-  productId: string;
+  productId: number;
   cartonsQty: number;
   piecesQty: number;
 }
 
 export interface PurchaseItemInput {
-  productId: string;
+  productId: number;
   cartonsQty: number;
   piecesQty: number;
 }

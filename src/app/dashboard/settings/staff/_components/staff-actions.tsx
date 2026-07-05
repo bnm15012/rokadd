@@ -6,7 +6,7 @@ import { Settings, UserX, UserCheck, MoreHorizontal } from 'lucide-react';
 import { deactivateMember, reactivateMember } from '@/actions/staff';
 
 interface StaffActionsProps {
-  memberId: string;
+  memberId: number;
   memberName: string;
   isActive: boolean;
   isSelf: boolean;

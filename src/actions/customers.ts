@@ -8,7 +8,7 @@ import { PaymentStatus } from "@/generated/prisma/enums";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-async function getShopId(): Promise<string> {
+async function getShopId(): Promise<number> {
   const user = await getSessionUser();
   const shopId = user.shopMembers[0]?.shopId;
   if (!shopId) throw new Error("No shop found for this user");
@@ -67,8 +67,8 @@ export async function updateCustomer(
     const shopId = await getShopId();
     await requirePermission(shopId, "canManageCustomers");
 
-    const customerId = formData.get("customerId") as string | null;
-    if (!customerId) return { success: false, error: "Customer ID is required." };
+    const customerId = parseInt(formData.get("customerId") as string, 10);
+    if (isNaN(customerId)) return { success: false, error: "Customer ID is required." };
 
     const name = (formData.get("name") as string | null)?.trim();
     if (!name) return { success: false, error: "Customer name is required." };
@@ -96,7 +96,7 @@ export async function updateCustomer(
   }
 }
 
-export async function deleteCustomer(customerId: string): Promise<ActionState> {
+export async function deleteCustomer(customerId: number): Promise<ActionState> {
   try {
     const shopId = await getShopId();
     await requirePermission(shopId, "canManageCustomers");
@@ -125,8 +125,9 @@ export async function recordCreditPayment(
     const shopId = await getShopId();
     await requirePermission(shopId, "canCollectCreditPayments");
 
-    const creditSaleId = formData.get("creditSaleId") as string | null;
-    if (!creditSaleId) {
+    const rawCreditSaleId = formData.get("creditSaleId") as string | null;
+    const creditSaleId = rawCreditSaleId ? parseInt(rawCreditSaleId, 10) : NaN;
+    if (isNaN(creditSaleId)) {
       return { success: false, error: "Credit sale ID is required." };
     }
 

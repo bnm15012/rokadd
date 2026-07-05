@@ -7,12 +7,12 @@ import { formatCurrency } from "@/lib/utils";
 import type { ActionState } from "@/types";
 
 interface Vendor {
-  id: string;
+  id: number;
   name: string;
 }
 
 interface Product {
-  id: string;
+  id: number;
   name: string;
   sku: string | null;
   piecesPerCarton: number;
@@ -20,7 +20,7 @@ interface Product {
 }
 
 interface PurchaseItem {
-  productId: string;
+  productId: number | '';
   cartonsQty: number;
   piecesQty: number;
 }
@@ -28,7 +28,7 @@ interface PurchaseItem {
 interface Props {
   vendors: Vendor[];
   products: Product[];
-  preselectedVendorId: string | null;
+  preselectedVendorId: number | null;
 }
 
 const initialState: ActionState = { success: false };
@@ -55,7 +55,7 @@ export function NewPurchaseClient({
     else router.push("/dashboard/vendors");
   }
 
-  const productMap = new Map(products.map((p) => [p.id, p]));
+  const productMap = new Map<number | '', Product>(products.map((p) => [p.id, p]));
 
   function addItem() {
     setItems((prev) => [
@@ -225,7 +225,7 @@ export function NewPurchaseClient({
                     <select
                       value={item.productId}
                       onChange={(e) =>
-                        updateItem(index, "productId", e.target.value)
+                        updateItem(index, "productId", e.target.value ? parseInt(e.target.value, 10) : "")
                       }
                       required
                       className="w-full rounded-lg border border-gray-300 px-2 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"

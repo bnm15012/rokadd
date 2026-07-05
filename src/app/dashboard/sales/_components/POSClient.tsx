@@ -9,7 +9,7 @@ import type { ActionState, SaleItemInput } from '@/types';
 import { cn } from '@/lib/utils';
 
 interface ProductRow {
-  id: string;
+  id: number;
   name: string;
   sku: string | null;
   categoryName: string | null;
@@ -20,7 +20,7 @@ interface ProductRow {
 }
 
 interface CustomerRow {
-  id: string;
+  id: number;
   name: string;
   phone: string | null;
 }
@@ -90,7 +90,7 @@ export function POSClient({
     });
   }
 
-  function updateCartItem(productId: string, field: 'cartonsQty' | 'piecesQty', value: number) {
+  function updateCartItem(productId: number, field: 'cartonsQty' | 'piecesQty', value: number) {
     setCart((prev) =>
       prev.map((i) =>
         i.product.id === productId ? { ...i, [field]: Math.max(0, value) } : i
@@ -98,7 +98,7 @@ export function POSClient({
     );
   }
 
-  function removeFromCart(productId: string) {
+  function removeFromCart(productId: number) {
     setCart((prev) => prev.filter((i) => i.product.id !== productId));
   }
 

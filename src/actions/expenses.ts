@@ -52,7 +52,7 @@ export async function createExpense(
   }
 }
 
-export async function deleteExpense(expenseId: string): Promise<ActionState> {
+export async function deleteExpense(expenseId: number): Promise<ActionState> {
   try {
     const user = await getSessionUser();
     const shopId = user.shopMembers[0]?.shopId;

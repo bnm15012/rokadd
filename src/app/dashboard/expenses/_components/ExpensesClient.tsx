@@ -30,7 +30,7 @@ const COMMON_CATEGORIES = [
 ];
 
 interface ExpenseRow {
-  id: string;
+  id: number;
   category: string;
   description: string | null;
   amount: number;
@@ -59,7 +59,7 @@ export function ExpensesClient({
   );
 
   const [category, setCategory] = useState('');
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [isPendingDelete, startDeleteTransition] = useTransition();
   const [showForm, setShowForm] = useState(false);
 
@@ -67,7 +67,7 @@ export function ExpensesClient({
   const isRange = fromDate !== toDate;
   const isToday = fromDate === today && toDate === today;
 
-  function handleDelete(expenseId: string) {
+  function handleDelete(expenseId: number) {
     setDeletingId(expenseId);
     startDeleteTransition(async () => {
       await deleteExpense(expenseId);

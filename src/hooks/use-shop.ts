@@ -5,12 +5,12 @@ import type { Role } from "@/generated/prisma/enums";
 import type { ShopMemberInfo } from "@/types";
 
 export interface ShopContextValue {
-  shopId: string;
+  shopId: number;
   shopName: string;
   shopSlug: string;
   role: Role;
-  memberId: string;
-  managerId: string | null;
+  memberId: number;
+  managerId: number | null;
   permissions: ShopMemberInfo["permissions"];
   /** True if the user is an OWNER or SuperAdmin acting as owner */
   isOwner: boolean;

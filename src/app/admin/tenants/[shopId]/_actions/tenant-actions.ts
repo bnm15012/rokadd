@@ -6,7 +6,7 @@ import { getSessionUser } from '@/lib/permissions';
 import type { ActionState } from '@/types';
 
 export async function extendSubscription(
-  subscriptionId: string,
+  subscriptionId: number,
   days: number
 ): Promise<ActionState> {
   try {
@@ -45,7 +45,7 @@ export async function extendSubscription(
 }
 
 export async function toggleShopSuspension(
-  shopId: string,
+  shopId: number,
   suspend: boolean
 ): Promise<ActionState> {
   try {

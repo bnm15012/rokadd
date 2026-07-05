@@ -152,8 +152,8 @@ export async function updateMemberPermissions(
       return { success: false, error: 'You do not have permission to manage staff' };
     }
 
-    const memberId = formData.get('memberId') as string;
-    if (!memberId) return { success: false, error: 'Member ID is required' };
+    const memberId = parseInt(formData.get('memberId') as string, 10);
+    if (isNaN(memberId)) return { success: false, error: 'Member ID is required' };
 
     // Fetch the target member to validate they belong to this shop
     const targetMember = await prisma.shopMember.findUnique({
@@ -200,7 +200,7 @@ export async function updateMemberPermissions(
   }
 }
 
-export async function deactivateMember(memberId: string): Promise<ActionState> {
+export async function deactivateMember(memberId: number): Promise<ActionState> {
   try {
     const user = await getSessionUser();
     const shopId = user.shopMembers[0]?.shopId;
@@ -241,7 +241,7 @@ export async function deactivateMember(memberId: string): Promise<ActionState> {
   }
 }
 
-export async function reactivateMember(memberId: string): Promise<ActionState> {
+export async function reactivateMember(memberId: number): Promise<ActionState> {
   try {
     const user = await getSessionUser();
     const shopId = user.shopMembers[0]?.shopId;

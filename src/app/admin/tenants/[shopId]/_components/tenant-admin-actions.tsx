@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { extendSubscription, toggleShopSuspension } from '../_actions/tenant-actions';
 
 interface TenantAdminActionsProps {
-  shopId: string;
+  shopId: number;
   isActive: boolean;
-  subscriptionId?: string;
+  subscriptionId?: number;
   currentPeriodEnd: string | null;
 }
 

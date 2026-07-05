@@ -73,11 +73,11 @@ const PasswordSchema = z
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-async function getSuperAdminId(): Promise<string | null> {
+async function getSuperAdminId(): Promise<number | null> {
   const session = await auth();
-  const user = session?.user as { id?: string; isSuperAdmin?: boolean } | undefined;
+  const user = session?.user as { id?: number | string; isSuperAdmin?: boolean } | undefined;
   if (!user?.id || !user.isSuperAdmin) return null;
-  return user.id;
+  return Number(user.id);
 }
 
 // ---------------------------------------------------------------------------

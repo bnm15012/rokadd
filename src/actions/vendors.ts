@@ -8,7 +8,7 @@ import { PaymentStatus } from "@/generated/prisma/enums";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-async function getShopId(): Promise<string> {
+async function getShopId(): Promise<number> {
   const user = await getSessionUser();
   const shopId = user.shopMembers[0]?.shopId;
   if (!shopId) throw new Error("No shop found for this user");
@@ -67,8 +67,8 @@ export async function updateVendor(
     const shopId = await getShopId();
     await requirePermission(shopId, "canManageVendors");
 
-    const vendorId = formData.get("vendorId") as string | null;
-    if (!vendorId) return { success: false, error: "Vendor ID is required." };
+    const vendorId = parseInt(formData.get("vendorId") as string, 10);
+    if (isNaN(vendorId)) return { success: false, error: "Vendor ID is required." };
 
     const name = (formData.get("name") as string | null)?.trim();
     if (!name) return { success: false, error: "Vendor name is required." };
@@ -96,7 +96,7 @@ export async function updateVendor(
   }
 }
 
-export async function deleteVendor(vendorId: string): Promise<ActionState> {
+export async function deleteVendor(vendorId: number): Promise<ActionState> {
   try {
     const shopId = await getShopId();
     await requirePermission(shopId, "canManageVendors");
@@ -124,8 +124,8 @@ export async function createPurchase(
     const shopId = await getShopId();
     await requirePermission(shopId, "canLogPurchases");
 
-    const vendorId = formData.get("vendorId") as string | null;
-    if (!vendorId) return { success: false, error: "Vendor is required." };
+    const vendorId = parseInt(formData.get("vendorId") as string, 10);
+    if (isNaN(vendorId)) return { success: false, error: "Vendor is required." };
 
     const billNumber =
       (formData.get("billNumber") as string | null)?.trim() || null;
@@ -217,7 +217,7 @@ export async function createPurchase(
             type: "PURCHASE_INWARD",
             quantityPieces: item.totalPieces,
             note: billNumber ? `Bill #${billNumber}` : "Purchase inward",
-            referenceId: newPurchase.id,
+            referenceId: String(newPurchase.id),
           },
         });
       }
@@ -247,8 +247,8 @@ export async function makeVendorPayment(
     const shopId = await getShopId();
     await requirePermission(shopId, "canMakeVendorPayments");
 
-    const purchaseId = formData.get("purchaseId") as string | null;
-    if (!purchaseId) return { success: false, error: "Purchase ID is required." };
+    const purchaseId = parseInt(formData.get("purchaseId") as string, 10);
+    if (isNaN(purchaseId)) return { success: false, error: "Purchase ID is required." };
 
     const amountRaw = formData.get("amount") as string | null;
     if (!amountRaw) return { success: false, error: "Amount is required." };

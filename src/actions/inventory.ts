@@ -17,12 +17,12 @@ export async function recordStockInward(
 
     await requirePermission(shopId, 'canLogStockInward');
 
-    const productId = formData.get('productId') as string;
+    const productId = parseInt(formData.get('productId') as string, 10);
     const cartonsQty = parseInt((formData.get('cartonsQty') as string) || '0', 10);
     const piecesQty = parseInt((formData.get('piecesQty') as string) || '0', 10);
     const note = (formData.get('note') as string) || null;
 
-    if (!productId) return { success: false, error: 'Product is required' };
+    if (isNaN(productId)) return { success: false, error: 'Product is required' };
     if (cartonsQty < 0 || piecesQty < 0) {
       return { success: false, error: 'Quantities cannot be negative' };
     }
@@ -76,7 +76,7 @@ export async function adjustStock(
 
     await requirePermission(shopId, 'canAdjustStock');
 
-    const productId = formData.get('productId') as string;
+    const productId = parseInt(formData.get('productId') as string, 10);
     const adjustmentType = formData.get('adjustmentType') as string;
     const quantityPieces = parseInt(
       (formData.get('quantityPieces') as string) || '0',
@@ -84,7 +84,7 @@ export async function adjustStock(
     );
     const note = (formData.get('note') as string) || null;
 
-    if (!productId) return { success: false, error: 'Product is required' };
+    if (isNaN(productId)) return { success: false, error: 'Product is required' };
     if (!['ADD', 'REMOVE'].includes(adjustmentType)) {
       return { success: false, error: 'Invalid adjustment type' };
     }

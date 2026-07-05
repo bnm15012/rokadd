@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 interface Props {
-  vendorId: string;
+  vendorId: number;
 }
 
 export function NewPurchaseLink({ vendorId }: Props) {

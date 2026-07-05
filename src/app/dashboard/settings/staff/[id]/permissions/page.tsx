@@ -44,6 +44,7 @@ const DATA_VISIBILITY_PERMISSIONS: { key: PermissionKey; label: string }[] = [
 
 export default async function PermissionsPage({ params }: PermissionsPageProps) {
   const { id: memberId } = await params;
+  const memberIdNum = parseInt(memberId, 10);
 
   let user;
   try {
@@ -65,7 +66,7 @@ export default async function PermissionsPage({ params }: PermissionsPageProps) 
   }
 
   const targetMember = await prisma.shopMember.findUnique({
-    where: { id: memberId },
+    where: { id: memberIdNum },
     include: {
       user: { select: { name: true, email: true } },
       permissions: true,
@@ -115,7 +116,7 @@ export default async function PermissionsPage({ params }: PermissionsPageProps) 
       </div>
 
       <PermissionsForm
-        memberId={memberId}
+        memberId={memberIdNum}
         screenPermissions={SCREEN_ACCESS_PERMISSIONS}
         dataPermissions={DATA_VISIBILITY_PERMISSIONS}
         allowedKeys={allowedKeys}

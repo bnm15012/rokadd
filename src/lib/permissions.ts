@@ -7,17 +7,28 @@ export type { NavItem } from "@/types/nav";
 export async function getSessionUser(): Promise<SessionUser> {
   const session = await auth();
   if (!session?.user) throw new Error("Unauthorized");
-  return session.user as unknown as SessionUser;
+  const raw = session.user as any;
+  // JWT may serialize numbers as strings; ensure all IDs are numbers
+  return {
+    ...raw,
+    id: Number(raw.id),
+    shopMembers: (raw.shopMembers || []).map((m: any) => ({
+      ...m,
+      id: Number(m.id),
+      shopId: Number(m.shopId),
+      managerId: m.managerId != null ? Number(m.managerId) : null,
+    })),
+  } as SessionUser;
 }
 
-export async function getPermissions(shopId: string) {
+export async function getPermissions(shopId: number) {
   const user = await getSessionUser();
   if (user.isSuperAdmin) {
     return {
       userId: user.id,
       shopId,
       role: "OWNER" as const,
-      memberId: "",
+      memberId: 0,
       managerId: null,
       isOwner: true,
       isSuperAdmin: true,
@@ -44,7 +55,7 @@ export async function getPermissions(shopId: string) {
   };
 }
 
-export async function requirePermission(shopId: string, permission: PermissionKey) {
+export async function requirePermission(shopId: number, permission: PermissionKey) {
   const ctx = await getPermissions(shopId);
   if (ctx.isOwner || ctx.isSuperAdmin) return ctx;
   if (!ctx.permissions || !ctx.permissions[permission]) {

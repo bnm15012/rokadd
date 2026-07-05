@@ -6,7 +6,7 @@ export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
-export function tenantPrisma(shopId: string) {
+export function tenantPrisma(shopId: number) {
   return prisma.$extends({
     query: {
       $allOperations({ model, operation, args, query }) {

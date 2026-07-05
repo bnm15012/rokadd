@@ -5,7 +5,7 @@ import { getRazorpay, verifyPaymentSignature } from '@/lib/razorpay';
 import { getSessionUser, getPermissions } from '@/lib/permissions';
 
 // Create a Razorpay order for plan upgrade/change
-export async function createPlanOrder(planId: string) {
+export async function createPlanOrder(planId: number) {
   const user = await getSessionUser();
   const shopId = user.shopMembers[0]?.shopId;
   if (!shopId) return { success: false, error: 'No shop found' };
@@ -84,7 +84,7 @@ export async function createPlanOrder(planId: string) {
 
 // Verify payment and activate subscription
 export async function verifyPlanPayment(params: {
-  planId: string;
+  planId: number;
   razorpayOrderId: string;
   razorpayPaymentId: string;
   razorpaySignature: string;

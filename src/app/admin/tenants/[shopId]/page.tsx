@@ -15,6 +15,7 @@ export default async function TenantDetailPage({
   searchParams,
 }: TenantDetailPageProps) {
   const { shopId } = await params;
+  const shopIdNum = parseInt(shopId, 10);
   const { tab = 'dashboard' } = await searchParams;
 
   let user;
@@ -26,7 +27,7 @@ export default async function TenantDetailPage({
   if (!user.isSuperAdmin) redirect('/');
 
   const shop = await prisma.shop.findUnique({
-    where: { id: shopId },
+    where: { id: shopIdNum },
     include: {
       members: {
         where: { role: 'OWNER' },
@@ -45,12 +46,12 @@ export default async function TenantDetailPage({
   await prisma.adminAuditLog.create({
     data: {
       adminId: user.id,
-      shopId,
+      shopId: shopIdNum,
       action: `Viewed tenant: ${shop.name} (tab: ${tab})`,
     },
   });
 
-  const db = tenantPrisma(shopId);
+  const db = tenantPrisma(shopIdNum);
 
   const TABS = [
     { key: 'dashboard', label: 'Dashboard' },
@@ -110,7 +111,7 @@ export default async function TenantDetailPage({
     });
   } else if (tab === 'vendors') {
     tabData = await prisma.vendor.findMany({
-      where: { shopId },
+      where: { shopId: shopIdNum },
       orderBy: { name: 'asc' },
       select: {
         id: true, name: true, phone: true,
@@ -135,7 +136,7 @@ export default async function TenantDetailPage({
     tabData = { sales, expenses };
   } else if (tab === 'staff') {
     tabData = await prisma.shopMember.findMany({
-      where: { shopId },
+      where: { shopId: shopIdNum },
       include: {
         user: { select: { name: true, email: true } },
         permissions: true,
@@ -179,7 +180,7 @@ export default async function TenantDetailPage({
             </div>
           )}
           <TenantAdminActions
-            shopId={shopId}
+            shopId={shopIdNum}
             isActive={shop.isActive}
             subscriptionId={sub?.id}
             currentPeriodEnd={sub?.currentPeriodEnd?.toISOString() ?? null}
@@ -208,7 +209,7 @@ export default async function TenantDetailPage({
       <TenantTabContent
         tab={tab}
         tabData={tabData}
-        shopId={shopId}
+        shopId={shopIdNum}
       />
     </div>
   );

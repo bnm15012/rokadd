@@ -14,6 +14,7 @@ export default async function VendorDetailPage({
 }) {
   // params is a Promise in Next.js 15+
   const { id } = await params;
+  const vendorId = parseInt(id, 10);
 
   const user = await getSessionUser();
   const shopId = user.shopMembers[0]?.shopId;
@@ -22,7 +23,7 @@ export default async function VendorDetailPage({
   const db = tenantPrisma(shopId);
 
   const vendor = await db.vendor.findUnique({
-    where: { id },
+    where: { id: vendorId },
     include: {
       purchases: {
         orderBy: { purchaseDate: "desc" },
@@ -94,7 +95,7 @@ export default async function VendorDetailPage({
 
           {/* Action buttons */}
           <div className="flex items-center gap-2 shrink-0">
-            <NewPurchaseLink vendorId={id} />
+            <NewPurchaseLink vendorId={vendorId} />
           </div>
         </div>
 

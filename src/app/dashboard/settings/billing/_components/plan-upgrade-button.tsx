@@ -16,7 +16,7 @@ declare global {
 }
 
 interface Props {
-  planId: string;
+  planId: number;
   planName: string;
   planPrice: number;
   isCurrent: boolean;
