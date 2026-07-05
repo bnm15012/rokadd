@@ -1,0 +1,573 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// PLATFORM-LEVEL MODELS (Not tenant-scoped)
+// ============================================================
+
+model SuperAdmin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("super_admins")
+}
+
+model Otp {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email, code])
+  @@map("otps")
+}
+
+model AdminAuditLog {
+  id         String   @id @default(cuid())
+  adminId    String
+  shopId     String
+  action     String
+  metadata   Json?
+  accessedAt DateTime @default(now())
+
+  @@index([adminId, accessedAt])
+  @@index([shopId, accessedAt])
+  @@map("admin_audit_logs")
+}
+
+model SubscriptionPlan {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  description    String?  @db.Text
+  priceMonthly   Int
+  priceYearly    Int
+  maxProducts    Int      @default(100)
+  maxStaff       Int      @default(3)
+  maxShops       Int      @default(1)
+  features       Json
+  isActive       Boolean  @default(true)
+  razorpayPlanId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  subscriptions Subscription[]
+
+  @@map("subscription_plans")
+}
+
+// ============================================================
+// USER & TENANT MODELS
+// ============================================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String
+  phone         String?
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  shopMembers ShopMember[]
+
+  @@map("users")
+}
+
+model Shop {
+  id        String  @id @default(cuid())
+  name      String
+  slug      String  @unique
+  address   String? @db.Text
+  phone     String?
+  gstin     String?
+  currency  String  @default("INR")
+  timezone  String  @default("Asia/Kolkata")
+  logoUrl   String?
+  isActive  Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members        ShopMember[]
+  subscription   Subscription?
+  categories     Category[]
+  products       Product[]
+  vendors        Vendor[]
+  customers      Customer[]
+  sales          Sale[]
+  purchases      Purchase[]
+  expenses       Expense[]
+  stockLogs      StockLog[]
+  creditSales    CreditSale[]
+  dailySummaries DailySummary[]
+  dailyRecons    DailyRecon[]
+
+  @@map("shops")
+}
+
+// ============================================================
+// RBAC: 3 Roles + Per-User Custom Permissions
+// ============================================================
+
+model ShopMember {
+  id        String   @id @default(cuid())
+  role      Role     @default(STAFF)
+  userId    String
+  shopId    String
+  managerId String?
+  isActive  Boolean  @default(true)
+  joinedAt  DateTime @default(now())
+
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shop        Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  permissions MemberPermission?
+
+  @@unique([userId, shopId])
+  @@index([shopId, role])
+  @@index([managerId])
+  @@map("shop_members")
+}
+
+enum Role {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+model MemberPermission {
+  id           String @id @default(cuid())
+  shopMemberId String @unique
+
+  canViewDashboard          Boolean @default(true)
+  canViewProducts           Boolean @default(false)
+  canManageProducts         Boolean @default(false)
+  canViewInventory          Boolean @default(false)
+  canLogStockInward         Boolean @default(false)
+  canAdjustStock            Boolean @default(false)
+  canCreateSales            Boolean @default(false)
+  canViewSalesHistory       Boolean @default(false)
+  canViewVendors            Boolean @default(false)
+  canManageVendors          Boolean @default(false)
+  canLogPurchases           Boolean @default(false)
+  canMakeVendorPayments     Boolean @default(false)
+  canViewExpenses           Boolean @default(false)
+  canLogExpenses            Boolean @default(false)
+  canViewCashFlow           Boolean @default(false)
+  canFinalizeCashFlow       Boolean @default(false)
+  canViewCustomers          Boolean @default(false)
+  canManageCustomers        Boolean @default(false)
+  canCollectCreditPayments  Boolean @default(false)
+  canViewAnalytics          Boolean @default(false)
+  canExportReports          Boolean @default(false)
+  canManageStaff            Boolean @default(false)
+  canViewSettings           Boolean @default(false)
+
+  canViewCostPrices         Boolean @default(false)
+  canViewProfitMargins      Boolean @default(false)
+  canViewVendorPayAmounts   Boolean @default(false)
+  canViewNetCashBalance     Boolean @default(false)
+
+  shopMember ShopMember @relation(fields: [shopMemberId], references: [id], onDelete: Cascade)
+
+  @@map("member_permissions")
+}
+
+// ============================================================
+// SUBSCRIPTION & BILLING
+// ============================================================
+
+model Subscription {
+  id                     String             @id @default(cuid())
+  shopId                 String             @unique
+  planId                 String
+  status                 SubscriptionStatus @default(TRIALING)
+  razorpaySubscriptionId String?            @unique
+  razorpayCustomerId     String?
+  currentPeriodStart     DateTime?
+  currentPeriodEnd       DateTime?
+  trialEndsAt            DateTime?
+  cancelledAt            DateTime?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+
+  shop     Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  plan     SubscriptionPlan @relation(fields: [planId], references: [id])
+  payments SubscriptionPayment[]
+
+  @@map("subscriptions")
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+}
+
+model SubscriptionPayment {
+  id                String   @id @default(cuid())
+  subscriptionId    String
+  amount            Int
+  currency          String   @default("INR")
+  razorpayPaymentId String?  @unique
+  status            String
+  paidAt            DateTime?
+  createdAt         DateTime @default(now())
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@map("subscription_payments")
+}
+
+// ============================================================
+// PRODUCT & INVENTORY MODELS
+// ============================================================
+
+model Category {
+  id     String @id @default(cuid())
+  name   String
+  shopId String
+
+  shop     Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  products Product[]
+
+  @@unique([shopId, name])
+  @@map("categories")
+}
+
+model Product {
+  id                    String  @id @default(cuid())
+  name                  String
+  sku                   String?
+  shopId                String
+  categoryId            String?
+  piecesPerCarton       Int     @default(1)
+  costPricePerCarton    Int
+  sellingPricePerCarton Int
+  sellingPricePerPiece  Int
+  currentStockPieces    Int     @default(0)
+  lowStockThreshold     Int     @default(0)
+  isActive              Boolean @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  shop          Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  category      Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  saleItems     SaleItem[]
+  purchaseItems PurchaseItem[]
+  stockLogs     StockLog[]
+
+  @@unique([shopId, sku])
+  @@index([shopId, isActive])
+  @@index([shopId, currentStockPieces])
+  @@map("products")
+}
+
+model StockLog {
+  id             String       @id @default(cuid())
+  shopId         String
+  productId      String
+  type           StockLogType
+  quantityPieces Int
+  note           String?      @db.Text
+  referenceId    String?
+  createdAt      DateTime     @default(now())
+
+  shop    Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([shopId, productId, createdAt])
+  @@map("stock_logs")
+}
+
+enum StockLogType {
+  PURCHASE_INWARD
+  SALE_OUTWARD
+  ADJUSTMENT_ADD
+  ADJUSTMENT_REMOVE
+  RETURN_INWARD
+  RECONCILIATION
+}
+
+// ============================================================
+// SALES MODELS
+// ============================================================
+
+model Sale {
+  id          String   @id @default(cuid())
+  shopId      String
+  invoiceNo   String?
+  customerId  String?
+  saleType    SaleType @default(CASH)
+  totalAmount Int
+  discount    Int      @default(0)
+  netAmount   Int
+  note        String?  @db.Text
+  saleDate    DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  shop     Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  items    SaleItem[]
+
+  @@index([shopId, saleDate])
+  @@map("sales")
+}
+
+enum SaleType {
+  CASH
+  CREDIT
+}
+
+model SaleItem {
+  id              String @id @default(cuid())
+  saleId          String
+  productId       String
+  cartonsQty      Int    @default(0)
+  piecesQty       Int    @default(0)
+  totalPieces     Int
+  unitPriceCarton Int
+  unitPricePiece  Int
+  lineTotal       Int
+
+  sale    Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@map("sale_items")
+}
+
+// ============================================================
+// VENDOR & PURCHASE MODELS
+// ============================================================
+
+model Vendor {
+  id      String  @id @default(cuid())
+  name    String
+  phone   String?
+  email   String?
+  address String? @db.Text
+  gstin   String?
+  shopId  String
+
+  shop      Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  purchases Purchase[]
+
+  @@index([shopId])
+  @@map("vendors")
+}
+
+model Purchase {
+  id            String        @id @default(cuid())
+  shopId        String
+  vendorId      String
+  billNumber    String?
+  totalAmount   Int
+  paidAmount    Int           @default(0)
+  paymentStatus PaymentStatus @default(UNPAID)
+  purchaseDate  DateTime      @default(now())
+  note          String?       @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  shop     Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  vendor   Vendor         @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  items    PurchaseItem[]
+  payments VendorPayment[]
+
+  @@index([shopId, purchaseDate])
+  @@index([shopId, paymentStatus])
+  @@map("purchases")
+}
+
+enum PaymentStatus {
+  PAID
+  PARTIALLY_PAID
+  UNPAID
+}
+
+model PurchaseItem {
+  id            String @id @default(cuid())
+  purchaseId    String
+  productId     String
+  cartonsQty    Int    @default(0)
+  piecesQty     Int    @default(0)
+  totalPieces   Int
+  costPerCarton Int
+  lineTotal     Int
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@map("purchase_items")
+}
+
+model VendorPayment {
+  id          String   @id @default(cuid())
+  purchaseId  String
+  shopId      String
+  amount      Int
+  paymentMode String   @default("CASH")
+  note        String?  @db.Text
+  paidAt      DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+
+  @@index([shopId, paidAt])
+  @@map("vendor_payments")
+}
+
+// ============================================================
+// CUSTOMER CREDIT (KHATA) MODELS
+// ============================================================
+
+model Customer {
+  id      String  @id @default(cuid())
+  name    String
+  phone   String?
+  email   String?
+  address String? @db.Text
+  shopId  String
+
+  shop        Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  sales       Sale[]
+  creditSales CreditSale[]
+
+  @@index([shopId])
+  @@map("customers")
+}
+
+model CreditSale {
+  id          String        @id @default(cuid())
+  shopId      String
+  customerId  String
+  saleId      String?
+  totalAmount Int
+  paidAmount  Int           @default(0)
+  status      PaymentStatus @default(UNPAID)
+  dueDate     DateTime?
+  note        String?       @db.Text
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  shop     Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  customer Customer        @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  payments CreditPayment[]
+
+  @@index([shopId, status])
+  @@map("credit_sales")
+}
+
+model CreditPayment {
+  id           String   @id @default(cuid())
+  creditSaleId String
+  amount       Int
+  paymentMode  String   @default("CASH")
+  note         String?  @db.Text
+  paidAt       DateTime @default(now())
+  createdAt    DateTime @default(now())
+
+  creditSale CreditSale @relation(fields: [creditSaleId], references: [id], onDelete: Cascade)
+
+  @@map("credit_payments")
+}
+
+// ============================================================
+// EXPENSE MODELS
+// ============================================================
+
+model Expense {
+  id          String   @id @default(cuid())
+  shopId      String
+  category    String
+  description String?  @db.Text
+  amount      Int
+  expenseDate DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@index([shopId, expenseDate])
+  @@map("expenses")
+}
+
+// ============================================================
+// DAILY STOCK RECONCILIATION
+// ============================================================
+
+model DailyRecon {
+  id               String          @id @default(cuid())
+  shopId           String
+  date             DateTime        @db.Date
+  totalSalesAmount Int             @default(0)  // sum of all item sales (in paise)
+  cashInHand       Int?            // physical cash counted by staff (paise)
+  cashExpected     Int?            // expected cash from sales (paise)
+  cashDifference   Int?            // cashInHand - cashExpected (paise, +ve = excess, -ve = shortage)
+  note             String?         @db.Text
+  createdBy        String          // userId who submitted
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  shop  Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  items DailyReconItem[]
+
+  @@unique([shopId, date])
+  @@map("daily_recons")
+}
+
+model DailyReconItem {
+  id              String @id @default(cuid())
+  reconId         String
+  productId       String
+  openingStock    Int    // pieces at start of day
+  closingStock    Int    // pieces counted by staff
+  unitsSold       Int    // opening - closing (pieces)
+  sellingPrice    Int    // selling price per piece at time of recon (paise)
+  salesAmount     Int    // unitsSold * sellingPrice (paise)
+
+  recon   DailyRecon @relation(fields: [reconId], references: [id], onDelete: Cascade)
+
+  @@map("daily_recon_items")
+}
+
+// ============================================================
+// DAILY SUMMARY
+// ============================================================
+
+model DailySummary {
+  id                 String   @id @default(cuid())
+  shopId             String
+  date               DateTime @db.Date
+  totalSalesAmount   Int      @default(0)
+  totalCashSales     Int      @default(0)
+  totalCreditSales   Int      @default(0)
+  vendorPaymentsMade Int      @default(0)
+  otherExpenses      Int      @default(0)
+  netCashBalance     Int      @default(0)
+  creditCollected    Int      @default(0)
+  isFinalized        Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@unique([shopId, date])
+  @@map("daily_summaries")
+}
