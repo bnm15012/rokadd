@@ -240,13 +240,50 @@ export default async function HomePage() {
     },
   });
 
+  // Rich feature sets per plan slug (shown regardless of DB features field)
+  const planFeatureMap: Record<string, string[]> = {
+    starter: [
+      `Up to ${10} products`,
+      "Up to 2 staff members",
+      "Inventory tracking (cartons & pieces)",
+      "Daily cash flow report",
+      "Customer khata (credit ledger)",
+      "Vendor purchase ledger",
+      "Expense logging",
+      "Low-stock alerts",
+      "Print daily reports",
+    ],
+    pro: [
+      `Up to ${50} products`,
+      "Up to 10 staff members",
+      "Everything in Starter",
+      "Sales analytics & charts",
+      "Monthly reports",
+      "Stock reconciliation",
+      "Role-based staff permissions",
+      "Daily reconciliation",
+      "Stock sheet snapshots",
+    ],
+    enterprise: [
+      "Unlimited products",
+      "Unlimited staff members",
+      "Everything in Pro",
+      "Priority support",
+      "Advanced analytics",
+      "Multi-location ready",
+      "Dedicated onboarding",
+      "Custom integrations",
+    ],
+  };
+
   // Transform DB plans for the pricing UI
   const plans = dbPlans.map((plan, idx) => {
-    const featuresArr = Array.isArray(plan.features) ? (plan.features as string[]) : [];
-    const builtFeatures = [
+    const dbFeaturesArr = Array.isArray(plan.features) ? (plan.features as string[]) : [];
+    // Use hardcoded rich features if available, otherwise fall back to DB features
+    const builtFeatures = planFeatureMap[plan.slug] ?? [
       `Up to ${plan.maxProducts >= 9999 ? "Unlimited" : plan.maxProducts} products`,
       `Up to ${plan.maxStaff >= 50 ? "Unlimited" : plan.maxStaff} staff members`,
-      ...featuresArr,
+      ...dbFeaturesArr,
     ];
 
     return {
@@ -607,19 +644,33 @@ export default async function HomePage() {
                   </div>
 
                   {/* Features */}
-                  <ul className="mt-8 flex-1 space-y-4">
-                    {plan.features.map((feat) => (
-                      <li key={feat} className="flex items-start gap-3">
-                        <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
-                          plan.highlighted
-                            ? "bg-blue-500/20 text-blue-400"
-                            : "bg-slate-600/50 text-slate-400"
-                        }`}>
-                          <IconCheck className="h-3 w-3" />
-                        </span>
-                        <span className="text-sm text-slate-300">{feat}</span>
-                      </li>
-                    ))}
+                  <ul className="mt-8 flex-1 space-y-3">
+                    {plan.features.map((feat, fi) => {
+                      const isInherited = feat.startsWith("Everything in");
+                      return (
+                        <li key={feat}>
+                          {isInherited && fi > 0 && (
+                            <div className="mb-3 border-t border-slate-700/50" />
+                          )}
+                          <div className="flex items-start gap-3">
+                            <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
+                              isInherited
+                                ? plan.highlighted
+                                  ? "bg-indigo-500/20 text-indigo-300"
+                                  : "bg-slate-500/30 text-slate-300"
+                                : plan.highlighted
+                                ? "bg-blue-500/20 text-blue-400"
+                                : "bg-slate-600/50 text-slate-400"
+                            }`}>
+                              <IconCheck className="h-3 w-3" />
+                            </span>
+                            <span className={`text-sm ${isInherited ? "font-semibold text-slate-200" : "text-slate-300"}`}>
+                              {feat}
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    })}
                   </ul>
 
                   {/* CTA Button */}
