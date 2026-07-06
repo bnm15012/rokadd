@@ -150,7 +150,7 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
             </div>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Daily Reconciliation</h1>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500" suppressHydrationWarning>
                 {new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
               </p>
             </div>
@@ -280,7 +280,7 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
           </div>
           <div>
             <h1 className="text-xl font-bold text-slate-900">Daily Reconciliation</h1>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500" suppressHydrationWarning>
               {new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
