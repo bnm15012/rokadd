@@ -109,7 +109,7 @@ export default function RefundPolicyPage() {
             <ol className="space-y-3 text-slate-300 list-none">
               {[
                 "Log in to your Rokadd account and navigate to Settings → Billing.",
-                'Click "Request Refund" or contact our support team directly at support@rokadd.in.',
+                'Click "Request Refund" or contact our support team directly at bookandmanage@gmail.com.',
                 "Provide your registered email address, the Razorpay Payment ID (found in your invoice), the reason for the refund request, and any relevant screenshots or context.",
                 "Our team will acknowledge your request within 1 business day.",
               ].map((step, i) => (
@@ -203,8 +203,8 @@ export default function RefundPolicyPage() {
             <div className="rounded-lg bg-slate-800 border border-slate-700 p-5 space-y-2 text-slate-300 text-sm">
               <p>
                 <span className="text-slate-500">Email:</span>{" "}
-                <a href="mailto:support@rokadd.in" className="text-blue-400 hover:underline">
-                  support@rokadd.in
+                <a href="mailto:bookandmanage@gmail.com" className="text-blue-400 hover:underline">
+                  bookandmanage@gmail.com
                 </a>
               </p>
               <p>

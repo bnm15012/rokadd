@@ -191,8 +191,8 @@ export default function PrivacyPage() {
             </ul>
             <p className="text-slate-300 mt-4">
               To exercise any of these rights, contact us at{" "}
-              <a href="mailto:privacy@rokadd.in" className="text-blue-400 hover:underline">
-                privacy@rokadd.in
+              <a href="mailto:bookandmanage@gmail.com" className="text-blue-400 hover:underline">
+                bookandmanage@gmail.com
               </a>
               . We will respond within 30 days.
             </p>
@@ -262,14 +262,14 @@ export default function PrivacyPage() {
               <p>Attn: Data Protection Officer</p>
               <p>
                 Email:{" "}
-                <a href="mailto:privacy@rokadd.in" className="text-blue-400 hover:underline">
-                  privacy@rokadd.in
+                <a href="mailto:bookandmanage@gmail.com" className="text-blue-400 hover:underline">
+                  bookandmanage@gmail.com
                 </a>
               </p>
               <p>
                 Support:{" "}
-                <a href="mailto:support@rokadd.in" className="text-blue-400 hover:underline">
-                  support@rokadd.in
+                <a href="mailto:bookandmanage@gmail.com" className="text-blue-400 hover:underline">
+                  bookandmanage@gmail.com
                 </a>
               </p>
               <p className="text-slate-500 text-sm pt-2">
