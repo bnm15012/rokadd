@@ -401,7 +401,7 @@ export function DailyReportClient({ shopName, fromDate, toDate, today, dayReport
   return (
     <div>
       {/* Screen controls — hidden on print, sticky on scroll */}
-      <div className="print:hidden space-y-3 mb-5 sticky top-0 z-30 bg-slate-50 -mx-4 sm:-mx-6 px-4 sm:px-6 pt-1 pb-3 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+      <div className="print:hidden space-y-3 mb-5">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

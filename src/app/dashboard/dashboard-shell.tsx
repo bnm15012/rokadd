@@ -63,7 +63,7 @@ export function DashboardShell({
             shopName={shopName}
             onMenuToggle={() => setSidebarOpen((prev) => !prev)}
           />
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50/80">
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50">
             {children}
           </main>
         </div>

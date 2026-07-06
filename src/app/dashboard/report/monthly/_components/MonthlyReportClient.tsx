@@ -91,7 +91,7 @@ export function MonthlyReportClient({ shopName, month, today, daySummaries }: Pr
   return (
     <div className="space-y-5">
       {/* Header — sticky */}
-      <div className="print:hidden sticky top-0 z-30 bg-slate-50 -mx-4 sm:-mx-6 px-4 sm:px-6 pt-1 pb-3 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+      <div className="print:hidden mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="rounded-lg p-1.5 bg-gradient-to-br from-emerald-500 to-teal-500 shadow-sm">

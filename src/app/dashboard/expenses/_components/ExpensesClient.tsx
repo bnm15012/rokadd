@@ -113,7 +113,7 @@ export function ExpensesClient({
   return (
     <div className="space-y-4">
       {/* Sticky header + filter bar */}
-      <div className="sticky top-0 z-30 bg-slate-50 -mx-4 sm:-mx-6 px-4 sm:px-6 pt-1 pb-3 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)] space-y-3">
+      <div className="space-y-3">
         {/* Header row */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

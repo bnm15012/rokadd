@@ -62,8 +62,8 @@ export default async function InventoryPage({
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Header — sticky */}
-      <div className="flex items-center gap-3 mb-6 sticky top-0 z-30 bg-slate-50 -mx-4 sm:-mx-6 px-4 sm:px-6 pt-1 pb-3 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
         <div className="rounded-lg p-1.5 bg-gradient-to-br from-amber-500 to-orange-500 shadow-sm">
           <Warehouse className="h-5 w-5 text-white" />
         </div>

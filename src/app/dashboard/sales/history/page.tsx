@@ -56,7 +56,7 @@ export default async function SalesHistoryPage({
   return (
     <div className="max-w-6xl mx-auto">
       {/* Sticky header + filter */}
-      <div className="sticky top-0 z-30 bg-slate-50 -mx-4 sm:-mx-6 px-4 sm:px-6 pt-1 pb-3 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)] space-y-3">
+      <div className="space-y-3 mb-4">
         {/* Header */}
         <div className="flex items-center gap-3">
           <Link

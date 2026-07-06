@@ -153,7 +153,7 @@ export default async function AnalyticsPage({ searchParams }: AnalyticsPageProps
   return (
     <div className="space-y-6">
       {/* Header — sticky */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sticky top-0 z-30 bg-slate-50 -mx-4 sm:-mx-6 px-4 sm:px-6 pt-1 pb-3 shadow-[0_2px_4px_-2px_rgba(0,0,0,0.05)]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div className="flex items-center gap-3">
           <div className="rounded-lg p-1.5 bg-gradient-to-br from-rose-500 to-red-500 shadow-sm">
             <BarChart3 className="h-5 w-5 text-white" />
