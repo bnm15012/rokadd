@@ -3,7 +3,7 @@
 import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Printer, FileText, ArrowRight, Lock, CheckCircle, Loader2, Calendar } from 'lucide-react';
+import { Printer, FileText, ArrowRight, Lock, CheckCircle, Loader2, Calendar, Grid3X3 } from 'lucide-react';
 import { formatCurrency, cn } from '@/lib/utils';
 import { finalizeDailySummary } from '@/actions/cashflow';
 import type { ActionState } from '@/types';
@@ -422,6 +422,13 @@ export function DailyReportClient({ shopName, fromDate, toDate, today, dayReport
             >
               <Calendar className="h-4 w-4" />
               Monthly
+            </Link>
+            <Link
+              href="/dashboard/report/stock-sheet"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition"
+            >
+              <Grid3X3 className="h-4 w-4" />
+              Stock Sheet
             </Link>
             <button
               type="button"

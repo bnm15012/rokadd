@@ -143,8 +143,28 @@ export async function submitReconciliation(
       }
     });
 
+    // Take a stock snapshot after reconciliation (best-effort, don't fail recon if this errors)
+    try {
+      const products = await prisma.product.findMany({
+        where: { shopId, isActive: true },
+        select: { id: true, currentStockPieces: true, piecesPerCarton: true },
+      });
+      for (const product of products) {
+        await prisma.stockSnapshot.upsert({
+          where: {
+            shopId_productId_date: { shopId, productId: product.id, date: today },
+          },
+          update: { stockPieces: product.currentStockPieces, piecesPerCarton: product.piecesPerCarton },
+          create: { shopId, productId: product.id, date: today, stockPieces: product.currentStockPieces, piecesPerCarton: product.piecesPerCarton },
+        });
+      }
+    } catch {
+      // Snapshot failure should not block reconciliation
+    }
+
     revalidatePath('/dashboard/reconciliation');
     revalidatePath('/dashboard/inventory');
+    revalidatePath('/dashboard/report/stock-sheet');
     revalidatePath('/dashboard');
 
     return {

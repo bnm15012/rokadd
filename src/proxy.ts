@@ -24,6 +24,7 @@ const PUBLIC_ROUTES = [
 const PUBLIC_PREFIXES = [
   "/api/auth",
   "/api/webhooks",
+  "/api/snapshots",
   "/_next",
   "/favicon.ico",
   "/public",
