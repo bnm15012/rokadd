@@ -110,10 +110,10 @@ export default function TermsPage() {
               businesses or individuals who are not authorised members of your
               organisation. You agree to notify us immediately at{" "}
               <a
-                href="mailto:support@rokadd.in"
+                href="mailto:bookandmanage@gmail.com"
                 className="text-blue-400 hover:text-blue-300 transition-colors"
               >
-                support@rokadd.in
+                bookandmanage@gmail.com
               </a>{" "}
               if you suspect any unauthorised use of your account.
             </p>
@@ -332,10 +332,10 @@ export default function TermsPage() {
               Account Settings and selecting &ldquo;Delete Account&rdquo;, or
               by contacting us at{" "}
               <a
-                href="mailto:support@rokadd.in"
+                href="mailto:bookandmanage@gmail.com"
                 className="text-blue-400 hover:text-blue-300 transition-colors"
               >
-                support@rokadd.in
+                bookandmanage@gmail.com
               </a>
               . Termination does not entitle you to a refund for any
               prepaid subscription fees.
@@ -425,19 +425,19 @@ export default function TermsPage() {
               <p className="text-slate-400 text-sm">
                 Email:{" "}
                 <a
-                  href="mailto:legal@rokadd.in"
+                  href="mailto:bookandmanage@gmail.com"
                   className="text-blue-400 hover:text-blue-300 transition-colors"
                 >
-                  legal@rokadd.in
+                  bookandmanage@gmail.com
                 </a>
               </p>
               <p className="text-slate-400 text-sm">
                 Support:{" "}
                 <a
-                  href="mailto:support@rokadd.in"
+                  href="mailto:bookandmanage@gmail.com"
                   className="text-blue-400 hover:text-blue-300 transition-colors"
                 >
-                  support@rokadd.in
+                  bookandmanage@gmail.com
                 </a>
               </p>
               <p className="text-slate-400 text-sm">

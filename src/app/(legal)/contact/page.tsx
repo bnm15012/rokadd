@@ -21,8 +21,8 @@ const contactCards = [
     ),
     label: "Email",
     sublabel: "Support",
-    value: "support@rokadd.in",
-    href: "mailto:support@rokadd.in",
+    value: "bookandmanage@gmail.com",
+    href: "mailto:bookandmanage@gmail.com",
   },
   {
     icon: (
@@ -41,8 +41,8 @@ const contactCards = [
     ),
     label: "Phone",
     sublabel: "Call us directly",
-    value: "+91 98765 43210",
-    href: "tel:+919876543210",
+    value: "+91 73260 27500",
+    href: "tel:+917326027500",
   },
   {
     icon: (
