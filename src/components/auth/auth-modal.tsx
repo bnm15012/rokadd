@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import LoginForm from "./login-form";
 import RegisterForm from "./register-form";
 import ForgotPasswordForm from "./forgot-password-form";
@@ -47,7 +48,7 @@ export default function AuthModal({
 
   const showTabs = view === "login" || view === "register";
 
-  return (
+  const modalContent = (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
       {/* Backdrop */}
       <div
@@ -125,4 +126,6 @@ export default function AuthModal({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
