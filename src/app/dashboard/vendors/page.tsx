@@ -22,9 +22,9 @@ export default async function VendorsPage() {
   });
 
   return (
-    <div>
-      {/* Header — sticky */}
-      <div className="flex items-center justify-between mb-6">
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6 flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="rounded-lg p-1.5 bg-gradient-to-br from-violet-500 to-purple-600 shadow-sm">
             <Truck className="h-5 w-5 text-white" />
@@ -73,9 +73,10 @@ export default async function VendorsPage() {
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm flex flex-col flex-1 min-h-0">
+          <div className="overflow-auto flex-1 min-h-0">
           <table className="min-w-full divide-y divide-gray-100">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 sticky top-0 z-10">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                   Vendor
@@ -146,6 +147,7 @@ export default async function VendorsPage() {
               })}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

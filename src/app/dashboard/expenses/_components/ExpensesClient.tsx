@@ -111,9 +111,9 @@ export function ExpensesClient({
   ).sort((a, b) => b[1] - a[1]);
 
   return (
-    <div className="space-y-4">
-      {/* Sticky header + filter bar */}
-      <div className="space-y-3">
+    <div className="flex flex-col h-full space-y-4">
+      {/* Header + filter bar */}
+      <div className="space-y-3 flex-shrink-0">
         {/* Header row */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -195,7 +195,7 @@ export function ExpensesClient({
 
       {/* Collapsible Add Expense form */}
       {canLog && showForm && (
-        <div className="rounded-xl border border-indigo-100 bg-indigo-50/30 p-5">
+        <div className="rounded-xl border border-indigo-100 bg-indigo-50/30 p-5 flex-shrink-0">
           {/* Success */}
           {createState.success && (
             <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
@@ -212,29 +212,34 @@ export function ExpensesClient({
             </div>
           )}
 
-          <form action={createFormAction}>
+          <form action={createFormAction} className="space-y-3">
+            {/* Row 1: category quick-pick chips */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                Category <span className="text-red-500">*</span>
+              </label>
+              <div className="flex gap-1 overflow-x-auto no-scrollbar">
+                {COMMON_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setCategory(cat)}
+                    className={`px-2 py-0.5 rounded-full text-xs font-medium transition-colors shrink-0 ${
+                      category === cat
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-white text-slate-500 hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Row 2: category input + description + amount + date + submit */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
-              {/* Category */}
+              {/* Category text input */}
               <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">
-                  Category <span className="text-red-500">*</span>
-                </label>
-                <div className="flex flex-wrap gap-1 mb-1.5">
-                  {COMMON_CATEGORIES.map((cat) => (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => setCategory(cat)}
-                      className={`px-2 py-0.5 rounded-full text-xs font-medium transition-colors ${
-                        category === cat
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-white text-slate-500 hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200'
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
                 <input
                   type="text"
                   name="category"
@@ -312,11 +317,11 @@ export function ExpensesClient({
 
       {/* Category breakdown chips (only when there are expenses) */}
       {categoryTotals.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2 flex-shrink-0 overflow-x-auto no-scrollbar">
           {categoryTotals.map(([cat, total]) => (
             <div
               key={cat}
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-100 bg-white px-3 py-1.5 shadow-sm"
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-100 bg-white px-3 py-1.5 shadow-sm shrink-0"
             >
               <span className="text-xs font-medium text-slate-600">{cat}</span>
               <span className="text-xs font-bold text-slate-800">{formatCurrency(total)}</span>
@@ -326,7 +331,7 @@ export function ExpensesClient({
       )}
 
       {/* Expense table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
         {initialExpenses.length === 0 ? (
           <div className="py-12 text-center">
             <Receipt className="h-8 w-8 text-slate-200 mx-auto mb-2" />
@@ -341,9 +346,9 @@ export function ExpensesClient({
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-auto flex-1 min-h-0">
             <table className="w-full text-sm">
-              <thead>
+              <thead className="sticky top-0 z-10">
                 <tr className="border-b border-slate-100 bg-slate-50">
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-slate-500 uppercase tracking-wide w-10">
                     #

@@ -142,8 +142,8 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
     const recon = existingRecon;
 
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between mb-2">
+      <div className="flex flex-col h-full space-y-6">
+        <div className="flex items-center justify-between mb-2 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="rounded-lg p-1.5 bg-gradient-to-br from-indigo-500 to-purple-600 shadow-sm">
               <ClipboardCheck className="h-5 w-5 text-white" />
@@ -165,7 +165,7 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
         </div>
 
         {/* Success banner */}
-        <div className="rounded-xl border border-green-200 bg-green-50 p-4 flex items-center gap-3">
+        <div className="rounded-xl border border-green-200 bg-green-50 p-4 flex items-center gap-3 flex-shrink-0">
           <CheckCircle className="h-5 w-5 text-green-600 shrink-0" />
           <div>
             <p className="font-semibold text-green-800">Reconciliation Complete</p>
@@ -175,7 +175,7 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
 
         {/* Summary row */}
         {recon && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 flex-shrink-0">
             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Sales</p>
               <p className="text-xl font-bold text-slate-900 mt-1">{formatCurrency(recon.totalSalesAmount)}</p>
@@ -203,10 +203,10 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
 
         {/* Per-product detail table */}
         {recon && recon.items.length > 0 && (
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
+          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
+            <div className="overflow-auto flex-1 min-h-0">
               <table className="w-full text-sm">
-                <thead>
+                <thead className="sticky top-0 z-10">
                   <tr className="bg-slate-50 border-b border-slate-200">
                     <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">#</th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">Product</th>
@@ -271,9 +271,9 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
 
   // ── Input form ─────────────────────────────────────────────────────
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Header — sticky */}
-      <div className="flex items-center justify-between mb-2">
+    <form onSubmit={handleSubmit} className="flex flex-col h-full space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-2 flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="rounded-lg p-1.5 bg-gradient-to-br from-indigo-500 to-purple-600 shadow-sm">
             <ClipboardCheck className="h-5 w-5 text-white" />
@@ -296,14 +296,14 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
 
       {/* Error banner */}
       {actionState.error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2 flex-shrink-0">
           <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-red-700">{actionState.error}</p>
         </div>
       )}
 
       {/* Instructions */}
-      <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
+      <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 flex-shrink-0">
         <p className="text-sm text-blue-800">
           <strong>How it works:</strong> Enter the physical closing stock count for each product.
           The system will calculate units sold and total sales by comparing with opening stock.
@@ -311,7 +311,7 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
       </div>
 
       {/* Search */}
-      <div className="relative">
+      <div className="relative flex-shrink-0">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
         <input
           type="text"
@@ -323,10 +323,10 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
       </div>
 
       {/* Products table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
+        <div className="overflow-auto flex-1 min-h-0">
           <table className="w-full text-sm">
-            <thead>
+            <thead className="sticky top-0 z-10">
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">#</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">Product</th>
@@ -429,7 +429,7 @@ export function ReconciliationClient({ products, alreadySubmitted, existingRecon
       </div>
 
       {/* Summary + Cash + Submit */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-shrink-0">
         {/* Sales summary */}
         <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-3">Sales Summary</h3>

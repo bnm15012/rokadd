@@ -66,9 +66,9 @@ export default async function ProductsPage({
   }))
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Header — sticky */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div className="flex flex-col h-full max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="rounded-lg p-1.5 bg-gradient-to-br from-purple-500 to-pink-500 shadow-sm">
             <Package className="h-5 w-5 text-white" />

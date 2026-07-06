@@ -72,9 +72,9 @@ export function ProductsTable({
   )
 
   return (
-    <>
+    <div className="flex flex-col flex-1 min-h-0">
       {/* Search bar */}
-      <div className="mb-4">
+      <div className="mb-4 flex-shrink-0">
         <div className="relative max-w-sm">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -100,10 +100,10 @@ export function ProductsTable({
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="overflow-x-auto">
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm flex flex-col flex-1 min-h-0">
+        <div className="overflow-auto flex-1 min-h-0">
           <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500">
+            <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 sticky top-0 z-10">
               <tr>
                 <th className="px-4 py-3 text-left">Name</th>
                 <th className="px-4 py-3 text-left">SKU</th>
@@ -219,7 +219,7 @@ export function ProductsTable({
 
         {/* Footer row count */}
         {filtered.length > 0 && (
-          <div className="border-t border-gray-100 bg-gray-50 px-4 py-2 text-xs text-gray-500">
+          <div className="border-t border-gray-100 bg-gray-50 px-4 py-2 text-xs text-gray-500 flex-shrink-0">
             Showing {filtered.length} of {products.length} product
             {products.length !== 1 ? 's' : ''}
             {isPending && (
@@ -228,6 +228,6 @@ export function ProductsTable({
           </div>
         )}
       </div>
-    </>
+    </div>
   )
 }

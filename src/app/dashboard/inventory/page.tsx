@@ -61,9 +61,9 @@ export default async function InventoryPage({
       : products;
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="flex flex-col h-full max-w-6xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-6 flex-shrink-0">
         <div className="rounded-lg p-1.5 bg-gradient-to-br from-amber-500 to-orange-500 shadow-sm">
           <Warehouse className="h-5 w-5 text-white" />
         </div>
@@ -83,7 +83,7 @@ export default async function InventoryPage({
       </div>
 
       {/* Summary cards */}
-      <div className="grid grid-cols-3 gap-4 mb-5">
+      <div className="grid grid-cols-3 gap-4 mb-5 flex-shrink-0">
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
           <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">Total Products</p>
           <p className="text-2xl font-bold text-gray-900">{products.length}</p>
@@ -99,7 +99,7 @@ export default async function InventoryPage({
       </div>
 
       {/* Filter bar */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 mb-5 flex items-center gap-2">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 mb-5 flex items-center gap-2 flex-shrink-0">
         <SlidersHorizontal className="h-4 w-4 text-gray-400" />
         <span className="text-sm text-gray-500 mr-1">Filter:</span>
         {([['all', 'All Products'], ['low', 'Low / Out of Stock'], ['ok', 'In Stock']] as const).map(
@@ -123,16 +123,16 @@ export default async function InventoryPage({
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
         {displayProducts.length === 0 ? (
           <div className="py-16 text-center">
             <Warehouse className="h-10 w-10 text-gray-200 mx-auto mb-3" />
             <p className="text-gray-400 text-sm">No products to show</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-auto flex-1 min-h-0">
             <table className="w-full text-sm">
-              <thead>
+              <thead className="sticky top-0 z-10">
                 <tr className="border-b border-gray-100 bg-gray-50">
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                     Product
