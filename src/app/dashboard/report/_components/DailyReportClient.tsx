@@ -14,7 +14,6 @@ export interface DayReport {
   date: string;
   saleItems: { productName: string; totalPieces: number; lineTotal: number; saleType: string }[];
   totalCashSales: number;
-  totalCreditSales: number;
   totalSales: number;
   totalDiscount: number;
   expenses: { category: string; description: string | null; amount: number }[];
@@ -141,18 +140,7 @@ function DaySection({ day, shopName, showPageBreak }: { day: DayReport; shopName
                   {formatCurrency(day.reconItems.length > 0 ? (day.reconTotalSales ?? 0) : day.totalSales)}
                 </td>
               </tr>
-              {day.reconItems.length === 0 && (day.totalCashSales > 0 || day.totalCreditSales > 0) && (
-                <>
-                  <tr>
-                    <td colSpan={3} className="px-3 py-0.5 text-right text-[10px] text-slate-500">Cash</td>
-                    <td className="px-3 py-0.5 text-right text-[10px] text-slate-500">{formatCurrency(day.totalCashSales)}</td>
-                  </tr>
-                  <tr>
-                    <td colSpan={3} className="px-3 py-0.5 text-right text-[10px] text-slate-500">Credit</td>
-                    <td className="px-3 py-0.5 text-right text-[10px] text-slate-500">{formatCurrency(day.totalCreditSales)}</td>
-                  </tr>
-                </>
-              )}
+
             </tfoot>
           </table>
         ) : (
@@ -279,12 +267,6 @@ function DaySection({ day, shopName, showPageBreak }: { day: DayReport; shopName
             <div className="flex justify-between text-xs">
               <span className="text-slate-600">Reconciliation Sales</span>
               <span className="font-medium text-slate-800">+ {formatCurrency(day.reconTotalSales)}</span>
-            </div>
-          )}
-          {day.totalCreditSales > 0 && (
-            <div className="flex justify-between text-xs">
-              <span className="text-slate-600">Credit Sales (Udhar)</span>
-              <span className="font-medium text-slate-500">{formatCurrency(day.totalCreditSales)} (not in cash)</span>
             </div>
           )}
           {day.totalCreditCollected > 0 && (

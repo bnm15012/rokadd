@@ -194,10 +194,7 @@ export default async function DailyReportPage({
     const totalCashSales = daySales
       .filter((s) => s.saleType === 'CASH')
       .reduce((sum, s) => sum + s.netAmount, 0);
-    const totalCreditSales = daySales
-      .filter((s) => s.saleType === 'CREDIT')
-      .reduce((sum, s) => sum + s.netAmount, 0);
-    const totalSales = totalCashSales + totalCreditSales;
+    const totalSales = daySales.reduce((sum, s) => sum + s.netAmount, 0);
     const totalDiscount = daySales.reduce((sum, s) => sum + s.discount, 0);
 
     const expenses = dayExpenses.map((e) => ({
@@ -243,7 +240,6 @@ export default async function DailyReportPage({
       date: day,
       saleItems,
       totalCashSales,
-      totalCreditSales,
       totalSales,
       totalDiscount,
       expenses,
